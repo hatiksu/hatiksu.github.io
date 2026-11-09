@@ -130,6 +130,11 @@ describe('перевод', () => {
     expect(localizeProject(p, 'ru').title).toBe('Орбита')
   })
 
+  it('подготовка к скриншоту', () => {
+    expect(parseManifest({ title: 'A', description: 'B', shot: { click: 'Демо' } }, source)!.shot).toEqual({ click: 'Демо' })
+    expect(parseManifest({ title: 'A', description: 'B', shot: 'x' }, source)!.shot).toBeUndefined()
+  })
+
   it('неполный перевод игнорируется', () => {
     expect(parseManifest({ title: 'A', description: 'B', en: { title: 'Only title' } }, source)!.en).toBeUndefined()
   })

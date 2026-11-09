@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-09T11:51:30.538Z",
+  "generatedAt": "2026-11-09T11:54:28.590Z",
   "projects": [
     {
       "id": "hatiksu/finance-tracker@main",
@@ -31,7 +31,10 @@
           "Budgets, charts and a forecast; your data never leaves the device"
         ]
       },
-      "updatedAt": "2026-11-09T11:50:45Z",
+      "shot": {
+        "click": "Заполнить демо-данными"
+      },
+      "updatedAt": "2026-11-09T11:54:12Z",
       "order": 1,
       "releases": [
         {
@@ -126,7 +129,10 @@
           "Gestures: pinch, double tap, hold to compare; processing runs in a Web Worker"
         ]
       },
-      "updatedAt": "2026-11-09T11:50:45Z",
+      "shot": {
+        "click": "Попробовать на примере"
+      },
+      "updatedAt": "2026-11-09T11:54:15Z",
       "order": 2,
       "releases": [
         {

@@ -1,0 +1,32 @@
+{
+  "apps": {
+    "finance-tracker": {
+      "commit": "3f811d43f9f2f16785bb26a3e31b6e75122ff9e8",
+      "shots": {
+        "desktop": "shots/finance-tracker-desktop.jpg",
+        "mobile": "shots/finance-tracker-mobile.jpg"
+      }
+    },
+    "orbit-game": {
+      "commit": "1a072b4358de413921d3a220882951d450d870be",
+      "shots": {
+        "desktop": "shots/orbit-game-desktop.jpg",
+        "mobile": "shots/orbit-game-mobile.jpg"
+      }
+    },
+    "ai-photo-editor": {
+      "commit": "60d736a5ea1c7654e35891cdefc7e3b1bb0b487d",
+      "shots": {
+        "desktop": "shots/ai-photo-editor-desktop.jpg",
+        "mobile": "shots/ai-photo-editor-mobile.jpg"
+      }
+    },
+    "prism-puzzle": {
+      "commit": "0efd6b25a93d6540b91a1497f9fe2437c7a668be",
+      "shots": {
+        "desktop": "shots/prism-puzzle-desktop.jpg",
+        "mobile": "shots/prism-puzzle-mobile.jpg"
+      }
+    }
+  }
+}

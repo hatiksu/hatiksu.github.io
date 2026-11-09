@@ -46,6 +46,8 @@ export interface PortfolioProject {
   /** Репозиторий с кодом и релизами на GitHub (owner/name), если code ведёт на GitHub */
   repo?: string
   en?: ProjectTranslation
+  /** Подготовка к автоскриншоту: нажать кнопку с этим текстом (поле "shot" в portfolio.json) */
+  shot?: { click: string }
   /** Релизы, новые сверху */
   releases?: Release[]
   /** Дата последнего коммита в ветке проекта (ISO) */
@@ -126,6 +128,7 @@ export function parseManifest(raw: unknown, source: ManifestSource): PortfolioPr
     slugify(title) ||
     'project'
   const en = parseTranslation(m.en)
+  const shotClick = m.shot && typeof m.shot === 'object' ? str((m.shot as Record<string, unknown>).click, 80) : ''
 
   return {
     id: `${source.repo}@${source.branch}`,
@@ -140,6 +143,7 @@ export function parseManifest(raw: unknown, source: ManifestSource): PortfolioPr
     code,
     ...(repo ? { repo } : {}),
     ...(en ? { en } : {}),
+    ...(shotClick ? { shot: { click: shotClick } } : {}),
     updatedAt: source.updatedAt,
     ...(order !== undefined ? { order } : {}),
   }
