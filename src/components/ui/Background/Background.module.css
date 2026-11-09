@@ -1,0 +1,75 @@
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.blob {
+  position: absolute;
+  width: 560px;
+  height: 560px;
+  border-radius: 50%;
+  filter: blur(120px);
+  animation: float 20s ease-in-out infinite;
+}
+
+.b1 {
+  background: var(--a1);
+  top: -180px;
+  left: -140px;
+  opacity: 0.35;
+}
+
+.b2 {
+  background: var(--a2);
+  top: 35%;
+  right: -220px;
+  opacity: 0.2;
+  animation-delay: -7s;
+}
+
+.b3 {
+  background: var(--a3);
+  bottom: -240px;
+  left: 30%;
+  opacity: 0.16;
+  animation-delay: -14s;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(80px, 60px) scale(1.12);
+  }
+  66% {
+    transform: translate(-40px, 30px) scale(0.92);
+  }
+}
+
+.grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 20%, transparent 75%);
+}
+
+.spotlight {
+  position: absolute;
+  inset: 0;
+}
+
+@media (max-width: 760px) {
+  .blob {
+    width: 340px;
+    height: 340px;
+    filter: blur(90px);
+  }
+}

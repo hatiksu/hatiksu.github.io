@@ -1,0 +1,62 @@
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.section {
+  padding: 90px 0 40px;
+}
+
+/* Вращающаяся градиентная рамка */
+.card {
+  position: relative;
+  padding: 1px;
+  border-radius: 32px;
+  background: conic-gradient(from var(--angle), var(--a1), var(--a2), var(--a3), var(--a1));
+  animation: rotate 6s linear infinite;
+}
+
+@keyframes rotate {
+  to {
+    --angle: 360deg;
+  }
+}
+
+.inner {
+  padding: clamp(48px, 8vw, 90px) 24px;
+  border-radius: 31px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(124, 92, 255, 0.25), transparent 60%),
+    #0b0c13;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--a2);
+}
+
+.title {
+  margin: 12px 0 14px;
+  font-family: var(--font-display);
+  font-size: clamp(30px, 6vw, 60px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.text {
+  max-width: 520px;
+  margin: 0 auto 34px;
+  color: var(--muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}

@@ -1,0 +1,20 @@
+.button {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 40;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  border: 1px solid var(--border-strong);
+  background: rgba(20, 22, 31, 0.8);
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.button:hover {
+  border-color: var(--a1);
+}

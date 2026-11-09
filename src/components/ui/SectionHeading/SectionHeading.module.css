@@ -1,0 +1,33 @@
+.heading {
+  margin-bottom: 44px;
+}
+
+.center {
+  text-align: center;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--a2);
+}
+
+.eyebrow::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: currentColor;
+}
+
+.title {
+  margin: 10px 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(30px, 5vw, 52px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}

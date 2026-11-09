@@ -1,0 +1,111 @@
+import { useRef } from 'react'
+import { motion, useScroll, useTransform, type Variants } from 'motion/react'
+import { useTyping } from '../../../hooks/useTyping'
+import { Button } from '../../ui/Button/Button'
+import styles from './Hero.module.css'
+
+interface HeroProps {
+  name: string
+  status: string
+  roles: string[]
+  about: string
+  github: string
+}
+
+const container: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.035, delayChildren: 0.2 } },
+}
+
+const letter: Variants = {
+  hidden: { y: '110%' },
+  show: { y: '0%', transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } },
+}
+
+const fadeUp = (delay: number) => ({
+  initial: { opacity: 0, y: 24 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] as const },
+})
+
+/** Разбивает текст на буквы для анимации появления. */
+function SplitText({ text, className }: { text: string; className?: string }) {
+  return (
+    <span className={className}>
+      {text.split(' ').map((word, wi) => (
+        <span key={wi} className={styles.word}>
+          {[...word].map((ch, ci) => (
+            <motion.span key={ci} className={styles.char} variants={letter}>
+              {ch}
+            </motion.span>
+          ))}
+        </span>
+      ))}
+    </span>
+  )
+}
+
+export function Hero({ name, status, roles, about, github }: HeroProps) {
+  const ref = useRef<HTMLElement>(null)
+  const typed = useTyping(roles)
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
+  const y = useTransform(scrollYProgress, [0, 1], [0, 160])
+  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.94])
+
+  return (
+    <section ref={ref} id="top" className={styles.hero}>
+      <motion.div className={`container ${styles.content}`} style={{ y, opacity, scale }}>
+        <motion.div className={styles.badge} {...fadeUp(0)}>
+          <i className={styles.dot} />
+          {status}
+        </motion.div>
+
+        <motion.h1 className={styles.title} variants={container} initial="hidden" animate="show" aria-label={`Привет, я ${name}`}>
+          <span aria-hidden="true">
+            <SplitText text="Привет, я" />
+            <br />
+            <SplitText text={name} className="gradient-text" />
+          </span>
+        </motion.h1>
+
+        <motion.p className={styles.typed} {...fadeUp(0.7)}>
+          <span className={styles.prompt}>&gt;</span>
+          <span className={styles.typedText}>{typed}</span>
+          <span className={styles.cursor} aria-hidden="true" />
+          <span className="visually-hidden">{roles.join(', ')}</span>
+        </motion.p>
+
+        <motion.p className={styles.lead} {...fadeUp(0.85)}>
+          {about}
+        </motion.p>
+
+        <motion.div className={styles.cta} {...fadeUp(1)}>
+          <Button href="#projects" variant="primary">
+            Смотреть проекты →
+          </Button>
+          <Button href={github} external>
+            GitHub
+          </Button>
+        </motion.div>
+      </motion.div>
+
+      <motion.a
+        href="#stats"
+        className={styles.scroll}
+        aria-label="Прокрутить вниз"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.6 }}
+      >
+        <span className={styles.mouse}>
+          <motion.span
+            className={styles.wheel}
+            animate={{ y: [0, 10, 0], opacity: [1, 0, 1] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+          />
+        </span>
+      </motion.a>
+    </section>
+  )
+}

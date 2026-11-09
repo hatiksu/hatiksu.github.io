@@ -1,0 +1,53 @@
+.button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 24px;
+  border-radius: 14px;
+  font-weight: 600;
+  border: 1px solid var(--border-strong);
+  overflow: hidden;
+  isolation: isolate;
+  transition: border-color 0.25s, box-shadow 0.25s;
+  will-change: transform;
+}
+
+.label {
+  position: relative;
+  z-index: 1;
+}
+
+.primary {
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--a1), #5b3bff);
+  box-shadow: 0 12px 40px -12px var(--a1);
+}
+
+/* Блик, пробегающий по кнопке при наведении */
+.primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.35) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.7s var(--ease-out);
+}
+
+.primary:hover::after {
+  transform: translateX(120%);
+}
+
+.primary:hover {
+  box-shadow: 0 16px 50px -10px var(--a1);
+}
+
+.ghost {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+}
+
+.ghost:hover {
+  border-color: var(--a1);
+}

@@ -1,0 +1,154 @@
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  padding: calc(var(--nav-h) + 40px) 0 100px;
+}
+
+.content {
+  will-change: transform, opacity;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(8px);
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.dot {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+}
+
+.dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #22c55e;
+  animation: ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes ping {
+  75%,
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+.title {
+  margin: 26px 0 22px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(44px, 10vw, 120px);
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.word {
+  display: inline-flex;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  margin-right: 0.25em;
+  vertical-align: top;
+}
+
+.word:last-child {
+  margin-right: 0;
+}
+
+.char {
+  display: inline-block;
+  will-change: transform;
+}
+
+.typed {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  min-height: 1.6em;
+  font-family: var(--font-mono);
+  font-size: clamp(16px, 2.4vw, 22px);
+  color: var(--muted);
+}
+
+.prompt {
+  color: var(--a2);
+}
+
+.typedText {
+  color: var(--text);
+}
+
+.cursor {
+  width: 0.55ch;
+  height: 1.2em;
+  margin-left: -6px;
+  background: var(--a2);
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.lead {
+  max-width: 640px;
+  margin: 22px 0 38px;
+  color: var(--muted);
+  font-size: clamp(16px, 1.8vw, 19px);
+}
+
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.scroll {
+  position: absolute;
+  left: 50%;
+  bottom: 32px;
+  transform: translateX(-50%);
+}
+
+.mouse {
+  display: flex;
+  justify-content: center;
+  width: 26px;
+  height: 42px;
+  padding-top: 8px;
+  border-radius: 14px;
+  border: 2px solid var(--border-strong);
+}
+
+.wheel {
+  width: 4px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--text);
+}
+
+@media (max-width: 760px) {
+  .hero {
+    padding-bottom: 90px;
+  }
+  .cta > * {
+    flex: 1 1 auto;
+  }
+}
