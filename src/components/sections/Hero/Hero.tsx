@@ -28,10 +28,24 @@ const fadeUp = (delay: number) => ({
   transition: { duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] as const },
 })
 
-/** Разбивает текст на буквы для анимации появления. */
-function SplitText({ text, className }: { text: string; className?: string }) {
+/**
+ * Слово с градиентом выезжает целиком: Safari на iOS не рисует
+ * background-clip: text на буквах, которые анимируются отдельно от родителя.
+ */
+function RevealWord({ text, className }: { text: string; className?: string }) {
   return (
-    <span className={className}>
+    <span className={styles.word}>
+      <motion.span className={`${styles.char} ${className ?? ''}`} variants={letter}>
+        {text}
+      </motion.span>
+    </span>
+  )
+}
+
+/** Разбивает текст на буквы для анимации появления. */
+function SplitText({ text }: { text: string }) {
+  return (
+    <span>
       {text.split(' ').map((word, wi) => (
         <span key={wi} className={styles.word}>
           {[...word].map((ch, ci) => (
@@ -65,7 +79,7 @@ export function Hero({ name, status, roles, about, github }: HeroProps) {
           <span aria-hidden="true">
             <SplitText text="Привет, я" />
             <br />
-            <SplitText text={name} className="gradient-text" />
+            <RevealWord text={name} className="gradient-text" />
           </span>
         </motion.h1>
 
