@@ -114,6 +114,8 @@ test('форма «Написать мне»: проверка полей и о�
   await form.getByLabel('Как тебя зовут').fill('Анна')
   await form.getByLabel('Почта или @telegram').fill('anna@example.com')
   await form.getByLabel('Сообщение').fill('Привет! Хочу заказать сайт.')
+  // Антиспам: мгновенно заполненную форму отправляет бот, а не человек
+  await page.waitForTimeout(2700)
   await form.getByRole('button', { name: 'Отправить', exact: true }).click()
   await expect(page.getByText('Сообщение улетело!')).toBeVisible()
   expect(sent[0]).toMatchObject({ name: 'Анна', contact: 'anna@example.com', _replyto: 'anna@example.com', _honey: '' })

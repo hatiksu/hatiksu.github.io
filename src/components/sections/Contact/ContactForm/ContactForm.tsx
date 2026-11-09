@@ -26,14 +26,17 @@ export function ContactForm({ endpoint }: { endpoint: string }) {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
     const elapsedMs = startedAt.current ? Date.now() - startedAt.current : 0
-    const check = validateMessage({ ...values, lang, elapsedMs })
-    if (!check.ok && !check.spam) {
-      setErrors(check.errors)
-      document.getElementById(`${id}-${Object.keys(check.errors)[0]}`)?.focus()
+    // Сначала поля (без антиспама), чтобы человек увидел свои ошибки
+    const check = validateMessage({ ...values, website: '', lang, elapsedMs: LIMITS.minFillMs })
+    if (!check.ok) {
+      if (!check.spam) {
+        setErrors(check.errors)
+        document.getElementById(`${id}-${Object.keys(check.errors)[0]}`)?.focus()
+      }
       return
     }
     // Бот (заполнил ловушку или отправил мгновенно) видит «успех», но ничего не уходит
-    if (!check.ok) return setStatus('sent')
+    if (!validateMessage({ ...values, lang, elapsedMs }).ok) return setStatus('sent')
     setStatus('sending')
     try {
       const res = await fetch(endpoint, {
