@@ -12,14 +12,29 @@ const stack = [
   { name: 'Canvas API', color: '#22d3ee' },
   { name: 'Claude API', color: '#d97757' },
   { name: 'ONNX / ML в браузере', color: '#7c5cff' },
+  { name: 'PWA', color: '#5a0fc8' },
+  { name: 'IndexedDB', color: '#f59e0b' },
   { name: 'Node.js', color: '#5fa04e' },
   { name: 'Git', color: '#f05032' },
   { name: 'GitHub', color: '#ffffff' },
   { name: 'Playwright', color: '#2ead33' },
 ]
 
-const projects = [
+const projects: SiteConfig['projects'] = [
   {
+    mockup: 'finance',
+    title: 'Финансовый трекер с ИИ',
+    text: 'Мобильное PWA-приложение для учёта доходов и расходов: ставится на телефон, работает без интернета, а ИИ помогает вводить траты и разбирать месяц.',
+    tags: ['React', 'TypeScript', 'PWA', 'IndexedDB', 'Claude API'],
+    points: [
+      'Траты одной строкой: «кофе 350», «такси 420 вчера» — сумма, дата и категория распознаются сами',
+      'ИИ разбирает сложные фразы на несколько операций и анализирует месяц',
+      'Бюджеты, графики, прогноз; данные хранятся только на устройстве',
+    ],
+    code: 'https://github.com/hatiksu/Claude-Code/tree/feature/finance-tracker',
+  },
+  {
+    mockup: 'editor',
     title: 'Фоторедактор с ИИ',
     text: 'Браузерный фоторедактор с нейросетями: удаляет фон прямо на устройстве, сам улучшает фото и понимает правки текстом через Claude.',
     tags: ['JavaScript', 'Canvas', 'Claude API', 'ONNX'],

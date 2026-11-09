@@ -1,0 +1,118 @@
+.phone {
+  position: relative;
+  width: min(190px, 46%);
+  aspect-ratio: 9 / 18;
+  display: flex;
+  flex-direction: column;
+  gap: 8%;
+  padding: 18% 7% 7%;
+  border-radius: 28px;
+  background: #0b0c12;
+  border: 6px solid #1c1f2b;
+  box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.8);
+  transform: perspective(1000px) rotateY(12deg) rotateX(6deg) rotate(-4deg);
+  transition: transform 0.7s var(--ease-out);
+}
+
+:global(article):hover .phone {
+  transform: perspective(1000px) rotateY(0) rotateX(0) rotate(0);
+}
+
+.notch {
+  position: absolute;
+  top: 3%;
+  left: 50%;
+  width: 34%;
+  height: 4%;
+  border-radius: 10px;
+  background: #1c1f2b;
+  transform: translateX(-50%);
+}
+
+.balance {
+  display: grid;
+  gap: 2px;
+  padding: 8% 9%;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #6d4dff, #4626d9);
+}
+
+.balance span {
+  font-size: 7px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.balance strong {
+  font-family: var(--font-display);
+  font-size: 11px;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10%;
+}
+
+.ring {
+  width: 48%;
+  transform: rotate(0deg);
+}
+
+.legend {
+  display: grid;
+  gap: 6px;
+  flex: 1;
+}
+
+.legend i {
+  display: block;
+  height: 5px;
+  border-radius: 3px;
+}
+
+.legend i:nth-child(2) {
+  width: 75%;
+}
+
+.legend i:nth-child(3) {
+  width: 55%;
+}
+
+.bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3%;
+  height: 14%;
+}
+
+.bars i {
+  flex: 1;
+  border-radius: 2px 2px 0 0;
+  background: #3987e5;
+}
+
+.list {
+  display: grid;
+  gap: 6px;
+}
+
+.list b {
+  height: 9px;
+  border-radius: 4px;
+  background: #1c1f2b;
+}
+
+.list b:nth-child(2) {
+  width: 80%;
+}
+
+@media (max-width: 900px) {
+  .phone {
+    width: 132px;
+    margin: 24px 0;
+    border-width: 5px;
+    border-radius: 24px;
+  }
+}

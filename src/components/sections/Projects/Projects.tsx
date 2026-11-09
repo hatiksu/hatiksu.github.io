@@ -2,27 +2,26 @@ import type { Project } from '../../../types'
 import { Button } from '../../ui/Button/Button'
 import { Reveal } from '../../ui/Reveal/Reveal'
 import { SectionHeading } from '../../ui/SectionHeading/SectionHeading'
+import { FinanceMockup } from './FinanceMockup/FinanceMockup'
 import styles from './Projects.module.css'
 
-/** Схематичный макет интерфейса проекта. */
-function Mockup() {
+/** Схематичный макет фоторедактора в окне браузера. */
+function EditorMockup() {
   return (
-    <div className={styles.shot} aria-hidden="true">
-      <div className={styles.mock}>
-        <div className={styles.bar}>
-          <i />
-          <i />
-          <i />
-        </div>
-        <div className={styles.screen}>
-          <div className={styles.image} />
-          <div className={styles.side}>
-            <b />
-            <b />
-            <b />
-            <b />
-            <b />
-          </div>
+    <div className={styles.mock}>
+      <div className={styles.bar}>
+        <i />
+        <i />
+        <i />
+      </div>
+      <div className={styles.screen}>
+        <div className={styles.image} />
+        <div className={styles.side}>
+          <b />
+          <b />
+          <b />
+          <b />
+          <b />
         </div>
       </div>
     </div>
@@ -37,7 +36,9 @@ export function Projects({ projects }: { projects: Project[] }) {
         <div className={styles.list}>
           {projects.map((project, i) => (
             <Reveal as="article" key={project.title} className={styles.project}>
-              <Mockup />
+              <div className={styles.shot} aria-hidden="true">
+                {project.mockup === 'finance' ? <FinanceMockup /> : <EditorMockup />}
+              </div>
               <div className={styles.body}>
                 <span className={styles.number}>{String(i + 1).padStart(2, '0')}</span>
                 <h3 className={styles.title}>{project.title}</h3>

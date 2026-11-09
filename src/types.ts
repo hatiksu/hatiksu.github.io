@@ -22,6 +22,8 @@ export interface Tech {
 }
 
 export interface Project {
+  /** Какой схематичный макет показать в карточке */
+  mockup: 'editor' | 'finance'
   title: string
   text: string
   tags: string[]
