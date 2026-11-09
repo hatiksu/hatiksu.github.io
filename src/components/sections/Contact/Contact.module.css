@@ -60,3 +60,11 @@
   justify-content: center;
   gap: 12px;
 }
+
+.or {
+  margin: 32px 0 16px;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}

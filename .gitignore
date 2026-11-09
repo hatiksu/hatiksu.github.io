@@ -31,3 +31,7 @@ playwright-report
 # Встроенные приложения собираются при деплое (npm run apps)
 .apps-cache
 public/apps
+
+# Секреты Worker для локального запуска
+worker/.dev.vars
+worker/.wrangler

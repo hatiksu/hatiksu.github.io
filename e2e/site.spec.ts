@@ -99,6 +99,50 @@ test('страница для шаринга отдаёт превью и вед
   await expect(page).toHaveURL(new RegExp(`#/project/${project.slug}$`))
 })
 
+test('форма «Написать мне»: проверка полей и отправка', async ({ page }) => {
+  const sent: unknown[] = []
+  await page.route('https://contact-worker.test/', async (route) => {
+    sent.push(route.request().postDataJSON())
+    await route.fulfill({ status: 200, contentType: 'application/json', headers: { 'Access-Control-Allow-Origin': '*' }, body: '{"ok":true}' })
+  })
+  await page.goto('./#contact')
+  const form = page.locator('#contact form')
+  await form.getByRole('button', { name: 'Отправить в Telegram' }).click()
+  await expect(form.getByText('Заполни это поле').first()).toBeVisible()
+  expect(sent).toHaveLength(0)
+
+  await form.getByLabel('Как тебя зовут').fill('Анна')
+  await form.getByLabel('Почта или @telegram').fill('anna@example.com')
+  await form.getByLabel('Сообщение').fill('Привет! Хочу заказать сайт.')
+  await form.getByRole('button', { name: 'Отправить в Telegram' }).click()
+  await expect(page.getByText('Сообщение улетело!')).toBeVisible()
+  expect(sent[0]).toMatchObject({ name: 'Анна', contact: 'anna@example.com', website: '', lang: 'ru' })
+})
+
+test('терминал: ` открывает, команды работают', async ({ page, isMobile }) => {
+  test.skip(isMobile, 'на телефоне нет клавиатуры — терминал открывается из палитры')
+  await page.goto('./')
+  await page.keyboard.press('Backquote')
+  const term = page.getByRole('dialog', { name: 'Терминал' })
+  await expect(term).toBeVisible()
+  const input = term.getByRole('textbox', { name: 'Команда' })
+  await input.fill('projects')
+  await input.press('Enter')
+  await expect(term.getByText(generated.projects[0].slug).first()).toBeVisible()
+  await input.fill(`open ${generated.projects[0].slug}`)
+  await input.press('Enter')
+  await expect(page).toHaveURL(new RegExp(`#/project/${generated.projects[0].slug}$`))
+  await expect(term).toBeHidden()
+})
+
+test('страница 404 с игрой', async ({ page }) => {
+  await page.goto('./404.html')
+  await expect(page.getByRole('heading', { level: 1, name: 'Страница потерялась' })).toBeVisible()
+  await expect(page.getByRole('application', { name: 'Игра «Разбей 404»' })).toBeVisible()
+  await page.goto('./#/no-such-page')
+  await expect(page.getByRole('heading', { level: 1, name: 'Страница потерялась' })).toBeVisible()
+})
+
 test.describe('мобильное меню', () => {
   test.skip(({ isMobile }) => !isMobile, 'бургер есть только на телефоне')
 

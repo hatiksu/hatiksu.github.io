@@ -20,6 +20,9 @@
 - **RU / EN** (по языку браузера, переключатель запоминается) и **светлая тема** (по системе, с плавной сменой).
 - **Превью для ссылок:** своя картинка 1200×630 для сайта и каждого проекта, страницы `p/<slug>/` для мессенджеров,
   `sitemap.xml`, `robots.txt`.
+- **Форма «Написать мне»** → сообщение приходит в Telegram через Cloudflare Worker (`worker/`, настройка — `worker/README.md`).
+- **Терминал-пасхалка:** клавиша `` ` `` (ё) — консоль с командами `help`, `projects`, `play orbit`, `open`, `download`, `contact`…
+- **404 с мини-игрой:** арканоид, где кирпичи выложены цифрами «404» (`404.html` для GitHub Pages и неизвестные адреса внутри сайта).
 - Адаптивность и бургер-меню, анимации появления, магнитные кнопки, 3D-наклон, доступность с клавиатуры.
 
 Lighthouse: компьютер — 99 / 100 / 100 / 100, телефон — 87 / 100 / 100 / 100
@@ -42,6 +45,7 @@ npm run test:e2e # E2E на компьютере и iPhone (Playwright)
 ## Структура
 
 ```
+worker/                Cloudflare Worker формы «Написать мне» → Telegram
 scripts/
 ├── sync-projects.ts   portfolio.json, релизы, языки и коммиты с GitHub
 ├── build-apps.ts      клон → сборка (DESKTOP=1, без Service Worker) → public/apps + скриншоты
@@ -49,17 +53,17 @@ scripts/
 └── share-pages.ts     dist/p/<slug>/index.html и sitemap.xml после сборки
 src/
 ├── App.tsx            оболочка: маршрут, палитра, окно приложения
-├── pages/             Home, ProjectPage
+├── pages/             Home, ProjectPage, NotFound
 ├── i18n/              ru.ts, en.ts — все тексты сайта
 ├── context/           язык и тема
 ├── data/              site.ts + *.generated.json (создаются скриптами, руками не править)
-├── lib/               projects, github, router, search, markdown, shader, format, prefs, toast (+ тесты)
+├── lib/               projects, github, router, search, terminal, breakout, contact, markdown, shader, … (+ тесты)
 ├── hooks/             usePreferences, useRoute, useScrollSpy, useScrollState, useTyping, …
 └── components/
     ├── layout/        Navbar, Burger, MobileMenu, Footer
     ├── sections/      Hero, Stats, Skills, Stack, Projects, Activity, Contact
     ├── project/       ProjectShot, DownloadButton, PlayFrame, ReleaseList
-    └── ui/            Button, Icon, CommandPalette, PrefsToggles, Background, Toaster, …
+    └── ui/            Button, Icon, CommandPalette, Terminal, BreakoutGame, PrefsToggles, Background, Toaster, …
 ```
 
 У каждого компонента своя папка: `Component.tsx` + `Component.module.css`.
@@ -91,5 +95,7 @@ src/
 `.github/workflows/deploy.yml` при пуше в `main`, раз в день и по кнопке «Run workflow» делает
 `sync → apps → og → build` и публикует сайт на GitHub Pages. Один раз включите
 **Settings → Pages → Source: GitHub Actions** — до этого сборка пропускается с подсказкой.
+
+`.github/workflows/worker.yml` публикует Worker формы, когда меняется `worker/` (нужны секреты — см. `worker/README.md`).
 
 `.github/workflows/ci.yml` на каждый пуш и PR: линтер, типы, сборка, unit- и E2E-тесты.

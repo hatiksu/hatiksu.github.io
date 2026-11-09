@@ -2,6 +2,8 @@ import { usePreferences } from '../../../hooks/usePreferences'
 import type { Contacts } from '../../../types'
 import { Button } from '../../ui/Button/Button'
 import { Reveal } from '../../ui/Reveal/Reveal'
+import { site } from '../../../data/site'
+import { ContactForm } from './ContactForm/ContactForm'
 import styles from './Contact.module.css'
 
 export function Contact({ contacts }: { contacts: Contacts }) {
@@ -19,9 +21,15 @@ export function Contact({ contacts }: { contacts: Contacts }) {
             <p className={styles.text}>
               {t.contact.text}
             </p>
+            {site.contactEndpoint && (
+              <>
+                <ContactForm endpoint={site.contactEndpoint} />
+                <p className={styles.or}>{t.contact.or}</p>
+              </>
+            )}
             <div className={styles.actions}>
               {hasEmail && (
-                <Button href={`mailto:${contacts.email}`} variant="primary">
+                <Button href={`mailto:${contacts.email}`} variant={site.contactEndpoint ? 'ghost' : 'primary'}>
                   {t.contact.mail}
                 </Button>
               )}

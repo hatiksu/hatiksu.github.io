@@ -43,6 +43,8 @@ export const site = {
   projects: generated.projects as PortfolioProject[],
   apps: (apps as AppsData).apps,
   github: github as GithubStats,
+  /** Cloudflare Worker формы «Написать мне» (worker/); задаётся при сборке переменной VITE_CONTACT_ENDPOINT */
+  contactEndpoint: (import.meta.env.VITE_CONTACT_ENDPOINT ?? '').trim(),
   contacts: {
     github: 'https://github.com/hatiksu',
     email: 'hatiksuofficial@gmail.com',
