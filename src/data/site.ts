@@ -43,8 +43,11 @@ export const site = {
   projects: generated.projects as PortfolioProject[],
   apps: (apps as AppsData).apps,
   github: github as GithubStats,
-  /** Cloudflare Worker формы «Написать мне» (worker/); задаётся при сборке переменной VITE_CONTACT_ENDPOINT */
-  contactEndpoint: (import.meta.env.VITE_CONTACT_ENDPOINT ?? '').trim(),
+  /**
+   * Куда отправляется форма «Написать мне»: FormSubmit пересылает её на почту.
+   * После активации FormSubmit выдаёт скрытый адрес — его можно задать переменной VITE_CONTACT_ENDPOINT.
+   */
+  contactEndpoint: (import.meta.env.VITE_CONTACT_ENDPOINT || 'https://formsubmit.co/ajax/hatiksuofficial@gmail.com').trim(),
   contacts: {
     github: 'https://github.com/hatiksu',
     email: 'hatiksuofficial@gmail.com',

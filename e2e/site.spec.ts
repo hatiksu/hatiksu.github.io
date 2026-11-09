@@ -101,22 +101,22 @@ test('страница для шаринга отдаёт превью и вед
 
 test('форма «Написать мне»: проверка полей и отправка', async ({ page }) => {
   const sent: unknown[] = []
-  await page.route('https://contact-worker.test/', async (route) => {
+  await page.route('https://formsubmit.test/ajax/test', async (route) => {
     sent.push(route.request().postDataJSON())
-    await route.fulfill({ status: 200, contentType: 'application/json', headers: { 'Access-Control-Allow-Origin': '*' }, body: '{"ok":true}' })
+    await route.fulfill({ status: 200, contentType: 'application/json', headers: { 'Access-Control-Allow-Origin': '*' }, body: '{"success":"true"}' })
   })
   await page.goto('./#contact')
   const form = page.locator('#contact form')
-  await form.getByRole('button', { name: 'Отправить в Telegram' }).click()
+  await form.getByRole('button', { name: 'Отправить', exact: true }).click()
   await expect(form.getByText('Заполни это поле').first()).toBeVisible()
   expect(sent).toHaveLength(0)
 
   await form.getByLabel('Как тебя зовут').fill('Анна')
   await form.getByLabel('Почта или @telegram').fill('anna@example.com')
   await form.getByLabel('Сообщение').fill('Привет! Хочу заказать сайт.')
-  await form.getByRole('button', { name: 'Отправить в Telegram' }).click()
+  await form.getByRole('button', { name: 'Отправить', exact: true }).click()
   await expect(page.getByText('Сообщение улетело!')).toBeVisible()
-  expect(sent[0]).toMatchObject({ name: 'Анна', contact: 'anna@example.com', website: '', lang: 'ru' })
+  expect(sent[0]).toMatchObject({ name: 'Анна', contact: 'anna@example.com', _replyto: 'anna@example.com', _honey: '' })
 })
 
 test('терминал: ` открывает, команды работают', async ({ page, isMobile }) => {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { formatTelegram, isReachable, validateMessage } from './contact'
+import { isReachable, toFormSubmit, validateMessage } from './contact'
 
 const good = { name: 'Анна', contact: 'anna@example.com', message: 'Привет! Есть идея проекта.', elapsedMs: 9000, website: '' }
 
@@ -28,12 +28,13 @@ describe('validateMessage', () => {
   })
 })
 
-describe('formatTelegram', () => {
-  it('экранирует HTML и добавляет подпись', () => {
-    const text = formatTelegram({ name: '<b>Хакер</b>', contact: '@nick', message: 'a < b & c', lang: 'ru' }, { country: 'DE' })
-    expect(text).toContain('&lt;b&gt;Хакер&lt;/b&gt;')
-    expect(text).toContain('a &lt; b &amp; c')
-    expect(text).toContain('@nick')
-    expect(text).toContain('🇷🇺 RU · DE')
+describe('toFormSubmit', () => {
+  it('тема, ответ на почту отправителя, ловушка', () => {
+    const body = toFormSubmit({ name: 'Анна', contact: 'anna@example.com', message: 'Привет', lang: 'ru' })
+    expect(body).toMatchObject({ name: 'Анна', _subject: 'Сообщение с сайта от Анна', _replyto: 'anna@example.com', _honey: '', _captcha: 'false' })
+  })
+
+  it('для ника в Telegram ответ на почту не ставится', () => {
+    expect(toFormSubmit({ name: 'Б', contact: '@nick', message: 'Привет', lang: 'en' })).not.toHaveProperty('_replyto')
   })
 })

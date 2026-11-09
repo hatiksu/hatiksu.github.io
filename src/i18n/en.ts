@@ -120,7 +120,7 @@ export const en: Dict = {
       contact: 'Email or @telegram',
       message: 'Message',
       placeholder: 'Tell me about your idea or task…',
-      send: 'Send to Telegram',
+      send: 'Send',
       sending: 'Sending…',
       sent: "Message sent! I'll get back to you soon.",
       again: 'Write another',

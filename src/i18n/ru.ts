@@ -120,7 +120,7 @@ export const ru = {
       contact: 'Почта или @telegram',
       message: 'Сообщение',
       placeholder: 'Расскажи об идее или задаче…',
-      send: 'Отправить в Telegram',
+      send: 'Отправить',
       sending: 'Отправляю…',
       sent: 'Сообщение улетело! Отвечу в ближайшее время.',
       again: 'Написать ещё',

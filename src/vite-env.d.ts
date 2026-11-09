@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  /** Адрес Cloudflare Worker формы «Написать мне»; пусто — формы нет */
+  /** Адрес FormSubmit для формы «Написать мне» (по умолчанию — на почту из контактов) */
   readonly VITE_CONTACT_ENDPOINT?: string
 }
 

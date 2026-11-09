@@ -25,7 +25,7 @@ export default defineConfig({
     url: `http://localhost:${PORT}/`,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
-    // Форма «Написать мне» включается адресом Worker; в тестах запросы к нему перехватываются
-    env: { VITE_CONTACT_ENDPOINT: 'https://contact-worker.test/' },
+    // Форма «Написать мне» в тестах отправляется на подставной адрес, запросы перехватываются
+    env: { VITE_CONTACT_ENDPOINT: 'https://formsubmit.test/ajax/test' },
   },
 })

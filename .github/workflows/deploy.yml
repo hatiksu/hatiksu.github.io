@@ -64,8 +64,8 @@ jobs:
         run: npm run og
       - run: npm run build
         env:
-          # Адрес Worker формы «Написать мне» (Settings → Secrets and variables → Actions → Variables).
-          # Пока переменной нет, вместо формы показываются кнопки почты и Telegram.
+          # Необязательно: скрытый адрес FormSubmit для формы (Settings → Secrets and variables → Actions → Variables).
+          # Без переменной форма отправляет на почту из контактов.
           VITE_CONTACT_ENDPOINT: ${{ vars.CONTACT_ENDPOINT }}
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

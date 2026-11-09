@@ -1,13 +1,13 @@
 import { useId, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { usePreferences } from '../../../../hooks/usePreferences'
-import { LIMITS, validateMessage, type ContactError, type ContactField } from '../../../../lib/contact'
+import { LIMITS, toFormSubmit, validateMessage, type ContactError, type ContactField } from '../../../../lib/contact'
 import { Icon } from '../../../ui/Icon/Icon'
 import styles from './ContactForm.module.css'
 
 type Status = 'idle' | 'sending' | 'sent' | 'failed' | 'rate'
 
-/** Форма «Написать мне»: сообщение уходит в Cloudflare Worker, а он пересылает его в Telegram */
+/** Форма «Написать мне»: FormSubmit пересылает сообщение на почту */
 export function ContactForm({ endpoint }: { endpoint: string }) {
   const { t, lang } = usePreferences()
   const f = t.contact.form
@@ -25,25 +25,28 @@ export function ContactForm({ endpoint }: { endpoint: string }) {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const payload = { ...values, lang, elapsedMs: startedAt.current ? Date.now() - startedAt.current : 0, page: location.hash || '/' }
-    const check = validateMessage({ ...payload, elapsedMs: Math.max(payload.elapsedMs, LIMITS.minFillMs) })
+    const elapsedMs = startedAt.current ? Date.now() - startedAt.current : 0
+    const check = validateMessage({ ...values, lang, elapsedMs })
     if (!check.ok && !check.spam) {
       setErrors(check.errors)
       document.getElementById(`${id}-${Object.keys(check.errors)[0]}`)?.focus()
       return
     }
+    // Бот (заполнил ловушку или отправил мгновенно) видит «успех», но ничего не уходит
+    if (!check.ok) return setStatus('sent')
     setStatus('sending')
     try {
-      const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(toFormSubmit(check.value, values.website)),
+      })
       if (res.status === 429) return setStatus('rate')
-      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; fields?: Partial<Record<ContactField, ContactError>> }
-      if (res.ok && data.ok) {
+      const data = (await res.json().catch(() => ({}))) as { success?: string | boolean }
+      if (res.ok && String(data.success) === 'true') {
         setStatus('sent')
         setValues({ name: '', contact: '', message: '', website: '' })
         startedAt.current = 0
-      } else if (data.fields) {
-        setErrors(data.fields)
-        setStatus('idle')
       } else setStatus('failed')
     } catch {
       setStatus('failed')

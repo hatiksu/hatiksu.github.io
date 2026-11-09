@@ -1,5 +1,5 @@
-// Сообщение из формы «Написать мне»: одна и та же проверка в браузере и в Cloudflare Worker,
-// плюс оформление для Telegram. Без зависимостей — Worker импортирует этот файл напрямую.
+// Сообщение из формы «Написать мне»: проверка полей, антиспам и данные для FormSubmit
+// (сервис пересылает форму на почту — без своего сервера и ключей).
 
 export const LIMITS = { name: 80, contact: 120, message: 2000, minMessage: 10, minFillMs: 2500 }
 
@@ -51,19 +51,18 @@ export function validateMessage(raw: unknown): Validation {
   return { ok: true, value: { name, contact, message, lang: r.lang === 'en' ? 'en' : 'ru' } }
 }
 
-const escapeHtml = (s: string) => s.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]!)
-
-/** Текст для Telegram (parse_mode: HTML) */
-export function formatTelegram(m: ContactMessage, meta: { country?: string; page?: string } = {}): string {
-  const contact = m.contact.startsWith('@') || /^https:\/\/t\.me\//.test(m.contact) ? m.contact : escapeHtml(m.contact)
-  return [
-    '📬 <b>Новое сообщение с сайта</b>',
-    '',
-    `<b>Имя:</b> ${escapeHtml(m.name)}`,
-    `<b>Связь:</b> ${contact}`,
-    '',
-    escapeHtml(m.message),
-    '',
-    `<i>${[m.lang === 'en' ? '🇬🇧 EN' : '🇷🇺 RU', meta.country, meta.page].filter(Boolean).map((s) => escapeHtml(String(s))).join(' · ')}</i>`,
-  ].join('\n')
+/** Тело запроса к FormSubmit (https://formsubmit.co/ajax/<почта>): письмо с ответом на контакт отправителя */
+export function toFormSubmit(m: ContactMessage, honey = '') {
+  const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(m.contact)
+  return {
+    name: m.name,
+    contact: m.contact,
+    message: m.message,
+    lang: m.lang === 'en' ? 'English' : 'Русский',
+    _subject: `Сообщение с сайта от ${m.name}`,
+    _template: 'table',
+    _captcha: 'false',
+    _honey: honey,
+    ...(isEmail ? { _replyto: m.contact } : {}),
+  }
 }
