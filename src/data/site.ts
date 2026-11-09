@@ -11,6 +11,7 @@ const stack = [
   { name: 'Vite', color: '#a855f7' },
   { name: 'Motion', color: '#ff4d8d' },
   { name: 'Canvas API', color: '#22d3ee' },
+  { name: 'SVG', color: '#ffb13b' },
   { name: 'Web Workers', color: '#e879f9' },
   { name: 'Web Audio', color: '#38bdf8' },
   { name: 'Claude API', color: '#d97757' },
