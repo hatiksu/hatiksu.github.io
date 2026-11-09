@@ -12,6 +12,7 @@ const stack = [
   { name: 'Motion', color: '#ff4d8d' },
   { name: 'Canvas API', color: '#22d3ee' },
   { name: 'Web Workers', color: '#e879f9' },
+  { name: 'Web Audio', color: '#38bdf8' },
   { name: 'Claude API', color: '#d97757' },
   { name: 'ONNX / ML в браузере', color: '#7c5cff' },
   { name: 'PWA', color: '#5a0fc8' },
@@ -20,6 +21,7 @@ const stack = [
   { name: 'Git', color: '#f05032' },
   { name: 'GitHub', color: '#ffffff' },
   { name: 'Playwright', color: '#2ead33' },
+  { name: 'Vitest', color: '#fcc72b' },
 ]
 
 // Проекты подтягиваются автоматически: скрипт npm run sync находит файлы portfolio.json
