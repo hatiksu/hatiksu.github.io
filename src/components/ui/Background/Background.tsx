@@ -65,7 +65,7 @@ export function Background() {
 
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
     // Рисуем в пониженном разрешении: шум мягкий, а GPU телефона скажет спасибо
-    const scale = 0.5
+    const scale = matchMedia('(pointer: coarse)').matches ? 0.35 : 0.5
     const resize = () => {
       canvas.width = Math.max(1, Math.round(innerWidth * scale))
       canvas.height = Math.max(1, Math.round(innerHeight * scale))
@@ -87,6 +87,7 @@ export function Background() {
     }
 
     let raf = 0
+    let started = false
     const start = performance.now()
     const frame = (now: number) => {
       mouse.x += (mouse.tx - mouse.x) * 0.04
@@ -99,16 +100,24 @@ export function Background() {
       gl.drawArrays(gl.TRIANGLES, 0, 3)
       if (!reduce) raf = requestAnimationFrame(frame)
     }
-    raf = requestAnimationFrame(frame)
+    // Запускаем после загрузки и простоя: первый экран и интерактивность важнее фона
+    const begin = () => {
+      started = true
+      raf = requestAnimationFrame(frame)
+    }
+    const idle = (cb: () => void) => ('requestIdleCallback' in window ? requestIdleCallback(cb, { timeout: 2500 }) : setTimeout(cb, 1200))
+    const kickoff = () => idle(begin)
+    if (document.readyState === 'complete') kickoff()
+    else window.addEventListener('load', kickoff, { once: true })
 
     // Во вкладке на фоне не тратим батарею
     const onVisibility = () => {
       cancelAnimationFrame(raf)
-      if (!document.hidden) raf = requestAnimationFrame(frame)
+      if (!document.hidden && started) raf = requestAnimationFrame(frame)
     }
     const onResize = () => {
       resize()
-      if (reduce) raf = requestAnimationFrame(frame)
+      if (reduce && started) raf = requestAnimationFrame(frame)
     }
     window.addEventListener('resize', onResize)
     document.addEventListener('visibilitychange', onVisibility)
@@ -118,6 +127,7 @@ export function Background() {
     }
     return () => {
       cancelAnimationFrame(raf)
+      window.removeEventListener('load', kickoff)
       window.removeEventListener('resize', onResize)
       document.removeEventListener('visibilitychange', onVisibility)
       window.removeEventListener('pointermove', onMove)

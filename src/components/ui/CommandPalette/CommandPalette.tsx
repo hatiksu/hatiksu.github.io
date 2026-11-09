@@ -245,7 +245,7 @@ function Palette({ onClose, onPlay }: Omit<CommandPaletteProps, 'open'>) {
               >
                 <Icon name={c.icon} size={17} />
                 <span className={styles.label}>{c.label}</span>
-                {i === active && <span className={styles.enter}>↵</span>}
+                {i === active && <span className={styles.enter} aria-hidden="true">↵</span>}
               </div>
             </li>
           ))}

@@ -12,6 +12,9 @@ export default defineConfig({
   use: {
     baseURL: `http://localhost:${PORT}/`,
     trace: 'off',
+    // Язык сайта выбирается по браузеру — тесты проверяют русскую версию, английскую включают кнопкой
+    locale: 'ru-RU',
+    colorScheme: 'dark',
   },
   projects: [
     { name: 'desktop', use: { ...devices['Desktop Chrome'] } },

@@ -4,13 +4,14 @@
 //   1. клонирует репозиторий (кеш — .apps-cache/<slug>), ставит зависимости и собирает приложение
 //      без Service Worker (DESKTOP=1), чтобы оно не кешировалось внутри сайта;
 //   2. кладёт сборку в public/apps/<slug>/ — на сайте её можно открыть и поиграть прямо на странице;
-//   3. открывает приложение в Playwright и снимает экраны компьютера и телефона в public/shots/;
+//   3. открывает приложение в Playwright и снимает экраны компьютера и телефона в public/shots/
+//      (JPEG для превью и уменьшенный WebP для сайта);
 //   4. записывает список в src/data/apps.generated.json.
 // Если коммит не изменился и всё на месте, проект пропускается.
 //
 // Запуск: npm run apps  (--force — пересобрать всё, --no-shots — без скриншотов)
 import { execFileSync } from 'node:child_process'
-import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
 import { createServer, type Server } from 'node:http'
 import { dirname, extname, join, normalize } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -131,6 +132,40 @@ async function shoot(projects: PortfolioProject[]) {
   }
 }
 
+/** Уменьшенные WebP-копии скриншотов для сайта (кодирует сам Chromium через canvas) */
+async function makeWebp() {
+  const { chromium } = await import('@playwright/test')
+  const sizes: Record<string, number> = { desktop: 960, mobile: 420 }
+  const jobs = Object.values(readJson<AppsData>(OUT, { apps: {} }).apps)
+    .flatMap((a) => (a.shots ? [a.shots.desktop, a.shots.mobile] : []))
+    .map((rel) => ({ jpg: join(PUBLIC, rel), webp: join(PUBLIC, rel.replace(/\.jpg$/, '.webp')), width: sizes[rel.includes('-mobile') ? 'mobile' : 'desktop'] }))
+    .filter((j) => existsSync(j.jpg) && (!existsSync(j.webp) || statSync(j.webp).mtimeMs < statSync(j.jpg).mtimeMs))
+  if (!jobs.length) return
+  const browser = await chromium.launch()
+  const page = await browser.newPage()
+  for (const j of jobs) {
+    const src = `data:image/jpeg;base64,${readFileSync(j.jpg).toString('base64')}`
+    const data = await page.evaluate(
+      async ({ src, width }) => {
+        const img = new Image()
+        img.src = src
+        await img.decode()
+        const canvas = document.createElement('canvas')
+        canvas.width = width
+        canvas.height = Math.round((img.height / img.width) * width)
+        const ctx = canvas.getContext('2d')!
+        ctx.imageSmoothingQuality = 'high'
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+        return canvas.toDataURL('image/webp', 0.8).split(',')[1]
+      },
+      { src, width: j.width },
+    )
+    writeFileSync(j.webp, Buffer.from(data, 'base64'))
+    console.log(`  🗜  ${j.webp.split('/public/')[1]}`)
+  }
+  await browser.close()
+}
+
 async function main() {
   const { projects } = readJson<{ projects: PortfolioProject[] }>(join(ROOT, 'src', 'data', 'projects.generated.json'), { projects: [] })
   const prev = readJson<AppsData>(OUT, { apps: {} })
@@ -168,6 +203,7 @@ async function main() {
 
   if (toShoot.length) await shoot(toShoot)
   writeFileSync(OUT, JSON.stringify(next, null, 2) + '\n')
+  await makeWebp()
   console.log(`[apps] встроено приложений: ${Object.keys(next.apps).length}`)
 }
 

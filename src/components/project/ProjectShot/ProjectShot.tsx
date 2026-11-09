@@ -22,6 +22,8 @@ interface ProjectShotProps {
 export function ProjectShot({ project, variant = 'card', eager }: ProjectShotProps) {
   const shots = site.apps[project.slug]?.shots
   const loading = eager ? 'eager' : 'lazy'
+  // В карточке — лёгкий WebP, крупно на странице проекта — исходный JPEG в полном разрешении
+  const pick = (jpg: string) => (variant === 'card' ? jpg.replace(/\.jpg$/, '.webp') : jpg)
 
   return (
     <motion.div layoutId={`shot-${project.slug}`} className={`${styles.stage} ${styles[variant]}`} aria-hidden="true">
@@ -34,10 +36,10 @@ export function ProjectShot({ project, variant = 'card', eager }: ProjectShotPro
               <i />
               <span>{project.slug}</span>
             </div>
-            <img src={shots.desktop} alt="" width={1440} height={900} loading={loading} decoding="async" />
+            <img src={pick(shots.desktop)} alt="" width={1440} height={900} loading={loading} decoding="async" fetchPriority={eager ? 'high' : 'auto'} />
           </div>
           <div className={styles.phone}>
-            <img src={shots.mobile} alt="" width={780} height={1688} loading={loading} decoding="async" />
+            <img src={pick(shots.mobile)} alt="" width={780} height={1688} loading={loading} decoding="async" />
           </div>
         </>
       ) : project.mockup === 'finance' ? (

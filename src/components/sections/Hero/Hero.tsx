@@ -90,7 +90,8 @@ export function Hero({ name, github }: HeroProps) {
           <span className="visually-hidden">{roles.join(', ')}</span>
         </motion.p>
 
-        <motion.p className={styles.lead} {...fadeUp(0.85)}>
+        {/* Самый крупный текст первого экрана (LCP): виден сразу, анимируется только сдвиг */}
+        <motion.p className={styles.lead} initial={{ y: 24 }} animate={{ y: 0 }} transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
           {about}
         </motion.p>
 
