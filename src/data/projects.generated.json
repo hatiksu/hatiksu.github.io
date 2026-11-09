@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-09T10:43:44.024Z",
+  "generatedAt": "2026-11-09T11:33:30.974Z",
   "projects": [
     {
       "id": "hatiksu/Claude-Code@feature/orbit-game",
@@ -19,7 +19,8 @@
       ],
       "mockup": "generic",
       "icon": "🪐",
-      "updatedAt": "2026-11-09T10:26:13Z",
+      "code": "https://github.com/hatiksu/orbit-game",
+      "updatedAt": "2026-11-09T11:32:21Z",
       "order": 1
     },
     {
@@ -40,7 +41,8 @@
       ],
       "mockup": "finance",
       "icon": "🚀",
-      "updatedAt": "2026-11-09T07:15:46Z",
+      "code": "https://github.com/hatiksu/finance-tracker",
+      "updatedAt": "2026-11-09T11:32:19Z",
       "order": 1
     },
     {
@@ -61,7 +63,8 @@
       ],
       "mockup": "generic",
       "icon": "🔺",
-      "updatedAt": "2026-11-09T10:43:14Z",
+      "code": "https://github.com/hatiksu/prism-puzzle",
+      "updatedAt": "2026-11-09T11:32:21Z",
       "order": 2
     },
     {
@@ -83,7 +86,8 @@
       ],
       "mockup": "editor",
       "icon": "🚀",
-      "updatedAt": "2026-11-09T07:18:22Z",
+      "code": "https://github.com/hatiksu/ai-photo-editor",
+      "updatedAt": "2026-11-09T11:32:20Z",
       "order": 2
     }
   ]
