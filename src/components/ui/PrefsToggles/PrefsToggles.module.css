@@ -1,0 +1,30 @@
+.group {
+  display: flex;
+  gap: 6px;
+}
+
+.button {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.button:hover {
+  border-color: var(--a1);
+}
+
+.lang {
+  font: 600 12px var(--font-mono);
+  letter-spacing: 0.04em;
+}
+
+.icon {
+  display: grid;
+}

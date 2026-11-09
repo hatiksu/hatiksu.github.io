@@ -1,3 +1,4 @@
+import { usePreferences } from '../../../hooks/usePreferences'
 import type { Tech } from '../../../types'
 import { Reveal } from '../../ui/Reveal/Reveal'
 import { SectionHeading } from '../../ui/SectionHeading/SectionHeading'
@@ -21,11 +22,12 @@ function Row({ items, reverse }: { items: Tech[]; reverse?: boolean }) {
 }
 
 export function Stack({ stack }: { stack: Tech[] }) {
+  const { t } = usePreferences()
   const half = Math.ceil(stack.length / 2)
   return (
     <section id="stack" className={styles.section}>
       <div className="container">
-        <SectionHeading eyebrow="На чём пишу" title="Технологии и инструменты" />
+        <SectionHeading eyebrow={t.stack.eyebrow} title={t.stack.title} />
       </div>
       <Reveal className={styles.rows}>
         <Row items={stack.slice(0, half)} />

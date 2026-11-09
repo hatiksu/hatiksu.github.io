@@ -9,7 +9,7 @@
   background:
     radial-gradient(circle at 100% 0%, rgba(124, 92, 255, 0.35), transparent 55%),
     radial-gradient(circle at 0% 100%, rgba(34, 211, 238, 0.18), transparent 55%),
-    #0a0b11;
+    var(--bg-elevated);
   overflow-y: auto;
 }
 
@@ -51,6 +51,7 @@
 
 .footer {
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
   gap: 20px;
   padding-top: 32px;

@@ -205,3 +205,9 @@ export function latestInstaller(p: PortfolioProject): (ReleaseAsset & { tag: str
   const r = p.releases?.find((x) => x.installer)
   return r?.installer ? { ...r.installer, tag: r.tag, publishedAt: r.publishedAt } : undefined
 }
+
+/** Игра или приложение — от этого зависит подпись кнопки («Играть» / «Попробовать») */
+export function isGame(p: PortfolioProject): boolean {
+  const text = `${p.title} ${p.text} ${p.en?.title ?? ''} ${p.tags.join(' ')}`
+  return /игр|аркад|головолом|\bgame|arcade|puzzle|canvas/i.test(text)
+}

@@ -1,14 +1,12 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform, type Variants } from 'motion/react'
+import { usePreferences } from '../../../hooks/usePreferences'
 import { useTyping } from '../../../hooks/useTyping'
 import { Button } from '../../ui/Button/Button'
 import styles from './Hero.module.css'
 
 interface HeroProps {
   name: string
-  status: string
-  roles: string[]
-  about: string
   github: string
 }
 
@@ -59,7 +57,9 @@ function SplitText({ text }: { text: string }) {
   )
 }
 
-export function Hero({ name, status, roles, about, github }: HeroProps) {
+export function Hero({ name, github }: HeroProps) {
+  const { t } = usePreferences()
+  const { status, roles, about } = t.hero
   const ref = useRef<HTMLElement>(null)
   const typed = useTyping(roles)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
@@ -75,9 +75,9 @@ export function Hero({ name, status, roles, about, github }: HeroProps) {
           {status}
         </motion.div>
 
-        <motion.h1 className={styles.title} variants={container} initial="hidden" animate="show" aria-label={`Привет, я ${name}`}>
+        <motion.h1 className={styles.title} variants={container} initial="hidden" animate="show" aria-label={`${t.hero.hello} ${name}`}>
           <span aria-hidden="true">
-            <SplitText text="Привет, я" />
+            <SplitText key={t.hero.hello} text={t.hero.hello} />
             <br />
             <RevealWord text={name} className="gradient-text" />
           </span>
@@ -96,9 +96,9 @@ export function Hero({ name, status, roles, about, github }: HeroProps) {
 
         <motion.div className={styles.cta} {...fadeUp(1)}>
           <Button href="#projects" variant="primary">
-            Смотреть проекты →
+            {t.hero.projects}
           </Button>
-          <Button href={github} external>
+          <Button href={github} icon="github" external>
             GitHub
           </Button>
         </motion.div>
@@ -107,7 +107,7 @@ export function Hero({ name, status, roles, about, github }: HeroProps) {
       <motion.a
         href="#stats"
         className={styles.scroll}
-        aria-label="Прокрутить вниз"
+        aria-label={t.hero.scroll}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.6 }}

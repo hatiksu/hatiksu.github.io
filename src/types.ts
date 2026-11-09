@@ -1,21 +1,3 @@
-export interface NavLink {
-  id: string
-  label: string
-}
-
-export interface Stat {
-  /** Число для анимации счётчика или готовая строка (например, «∞») */
-  value: number | string
-  suffix?: string
-  label: string
-}
-
-export interface Skill {
-  icon: string
-  title: string
-  text: string
-}
-
 export interface Tech {
   name: string
   color: string
@@ -31,17 +13,12 @@ export interface Contacts {
   telegram: string
 }
 
-import type { PortfolioProject } from './lib/projects'
+/** Встроенные приложения и их скриншоты (scripts/build-apps.ts) */
+export interface AppsData {
+  apps: Record<string, { commit: string; shots: { desktop: string; mobile: string } | null }>
+}
 
-export interface SiteConfig {
-  name: string
-  status: string
-  roles: string[]
-  about: string
-  nav: NavLink[]
-  stats: Stat[]
-  skills: Skill[]
-  stack: Tech[]
-  projects: PortfolioProject[]
-  contacts: Contacts
+export interface NavLink {
+  id: string
+  label: string
 }

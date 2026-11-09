@@ -15,7 +15,40 @@
   --font-body: 'Inter', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --surface: rgba(255, 255, 255, 0.035);
+  --surface-strong: rgba(255, 255, 255, 0.07);
+  --grid-line: rgba(255, 255, 255, 0.035);
+  --header-bg: rgba(7, 8, 12, 0.7);
+  --shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.8);
+  --heat-0: rgba(255, 255, 255, 0.05);
   color-scheme: dark;
+}
+
+/* Светлая тема: переопределяем только переменные */
+:root[data-theme='light'] {
+  --bg: #f6f6fb;
+  --bg-elevated: #ffffff;
+  --card: rgba(255, 255, 255, 0.78);
+  --border: rgba(20, 20, 50, 0.1);
+  --border-strong: rgba(20, 20, 50, 0.18);
+  --text: #12131a;
+  --muted: #5b6275;
+  --a1: #6a46ff;
+  --a2: #0891b2;
+  --a3: #db2777;
+  --surface: rgba(20, 20, 60, 0.04);
+  --surface-strong: rgba(20, 20, 60, 0.08);
+  --grid-line: rgba(20, 20, 60, 0.06);
+  --header-bg: rgba(246, 246, 251, 0.78);
+  --shadow: 0 30px 70px -35px rgba(40, 30, 120, 0.35);
+  --heat-0: rgba(20, 20, 60, 0.06);
+  color-scheme: light;
+}
+
+/* Плавная смена темы (View Transitions) */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.45s;
 }
 
 *,
@@ -34,6 +67,7 @@ body {
   margin: 0;
   min-height: 100dvh;
   background: var(--bg);
+  transition: background-color 0.3s;
   color: var(--text);
   font: 16px/1.6 var(--font-body);
   overflow-x: hidden;
@@ -58,6 +92,15 @@ img,
 svg {
   display: block;
   max-width: 100%;
+}
+
+kbd {
+  padding: 1px 6px;
+  border-radius: 6px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  font: 500 11px/1.6 var(--font-mono);
+  color: var(--muted);
 }
 
 ::selection {

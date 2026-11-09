@@ -2,6 +2,8 @@ import { useEffect, useRef } from 'react'
 import { AnimatePresence, motion, type Variants } from 'motion/react'
 import type { Contacts, NavLink } from '../../../types'
 import { useLockBodyScroll } from '../../../hooks/useLockBodyScroll'
+import { usePreferences } from '../../../hooks/usePreferences'
+import { PrefsToggles } from '../../ui/PrefsToggles/PrefsToggles'
 import styles from './MobileMenu.module.css'
 
 interface MobileMenuProps {
@@ -31,6 +33,7 @@ const item: Variants = {
 
 /** Полноэкранное мобильное меню с раскрытием кругом из бургера. */
 export function MobileMenu({ id, open, links, active, contacts, onClose }: MobileMenuProps) {
+  const { t } = usePreferences()
   const firstLink = useRef<HTMLAnchorElement>(null)
   useLockBodyScroll(open)
 
@@ -48,7 +51,7 @@ export function MobileMenu({ id, open, links, active, contacts, onClose }: Mobil
   const socials = [
     contacts.github && { label: 'GitHub', href: contacts.github },
     contacts.telegram && { label: 'Telegram', href: contacts.telegram },
-    contacts.email && { label: 'Почта', href: `mailto:${contacts.email}` },
+    contacts.email && { label: t.nav.mail, href: `mailto:${contacts.email}` },
   ].filter(Boolean) as { label: string; href: string }[]
 
   return (
@@ -59,7 +62,7 @@ export function MobileMenu({ id, open, links, active, contacts, onClose }: Mobil
           className={styles.menu}
           role="dialog"
           aria-modal="true"
-          aria-label="Меню"
+          aria-label={t.nav.menu}
           variants={overlay}
           initial="closed"
           animate="open"
@@ -81,6 +84,7 @@ export function MobileMenu({ id, open, links, active, contacts, onClose }: Mobil
             ))}
           </nav>
           <motion.div className={styles.footer} variants={item}>
+            <PrefsToggles />
             {socials.map((s) => (
               <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer">
                 {s.label} ↗

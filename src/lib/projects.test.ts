@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { githubRepo, latestInstaller, localizeProject, mergeProjects, parseManifest, parseReleases, slugify, type PortfolioProject } from './projects'
+import { githubRepo, isGame, latestInstaller, localizeProject, mergeProjects, parseManifest, parseReleases, slugify, type PortfolioProject } from './projects'
 
 const source = { repo: 'hatiksu/demo', branch: 'main', isPrivate: false, updatedAt: '2026-11-01T10:00:00Z' }
 
@@ -116,6 +116,15 @@ describe('адрес страницы и репозиторий', () => {
     expect(githubRepo('https://github.com/a/b/tree/main')).toBe('a/b')
     expect(githubRepo('https://gitlab.com/a/b')).toBeUndefined()
     expect(slugify('  Привет World 2 ')).toBe('world-2')
+  })
+})
+
+describe('isGame', () => {
+  it('игры отличает от приложений', () => {
+    const p = (title: string, tags: string[] = []) => ({ ...parseManifest({ title, description: 'B', tags }, source)! })
+    expect(isGame(p('Призма — головоломка со светом'))).toBe(true)
+    expect(isGame(p('Орбита', ['Canvas 2D']))).toBe(true)
+    expect(isGame(p('Финансовый трекер с ИИ', ['React']))).toBe(false)
   })
 })
 

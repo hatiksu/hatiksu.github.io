@@ -1,0 +1,133 @@
+.stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(124, 92, 255, 0.45), transparent 55%),
+    radial-gradient(circle at 80% 90%, rgba(34, 211, 238, 0.3), transparent 50%),
+    #0d0f1a;
+  isolation: isolate;
+}
+
+.card {
+  min-height: 340px;
+  height: 100%;
+}
+
+.hero {
+  aspect-ratio: 16 / 9;
+  border-radius: 28px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.browser {
+  position: absolute;
+  left: 7%;
+  top: 12%;
+  width: 78%;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0f1115;
+  border: 1px solid #2a2f3a;
+  box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.8);
+  transform: perspective(1200px) rotateY(-8deg) rotateX(4deg);
+  transform-origin: left center;
+  transition: transform 0.8s var(--ease-out);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-bottom: 1px solid #2a2f3a;
+}
+
+.bar i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff5f57;
+}
+
+.bar i:nth-child(2) {
+  background: #febc2e;
+}
+
+.bar i:nth-child(3) {
+  background: #28c840;
+}
+
+.bar span {
+  margin-left: 10px;
+  padding: 1px 10px;
+  border-radius: 6px;
+  background: #1a1d26;
+  color: #8a92a6;
+  font: 10px/1.6 var(--font-mono);
+}
+
+.browser img,
+.phone img {
+  width: 100%;
+  height: auto;
+}
+
+.phone {
+  position: absolute;
+  right: 6%;
+  bottom: -6%;
+  width: 24%;
+  padding: 5px;
+  border-radius: 26px;
+  background: #050608;
+  border: 1px solid #2a2f3a;
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.9);
+  transform: rotate(4deg);
+  transition: transform 0.8s var(--ease-out);
+}
+
+.phone img {
+  border-radius: 21px;
+}
+
+:global(.shot-hover):hover .browser,
+.hero .browser {
+  transform: perspective(1200px) rotateY(0) rotateX(0);
+}
+
+:global(.shot-hover):hover .phone {
+  transform: rotate(0) translateY(-4%);
+}
+
+.hero .browser {
+  top: 9%;
+  left: 6%;
+  width: 70%;
+}
+
+.hero .phone {
+  bottom: 7%;
+  width: 22%;
+  transform: rotate(0);
+}
+
+@media (max-width: 900px) {
+  .card {
+    min-height: 0;
+    aspect-ratio: 16 / 10;
+  }
+  .hero {
+    border-radius: 20px;
+    aspect-ratio: 4 / 3;
+  }
+  .phone {
+    border-radius: 16px;
+    padding: 3px;
+  }
+  .phone img {
+    border-radius: 13px;
+  }
+}

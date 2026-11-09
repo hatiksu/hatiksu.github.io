@@ -29,7 +29,7 @@
   text-align: center;
   background:
     radial-gradient(circle at 50% 0%, rgba(124, 92, 255, 0.25), transparent 60%),
-    #0b0c13;
+    var(--bg-elevated);
 }
 
 .eyebrow {

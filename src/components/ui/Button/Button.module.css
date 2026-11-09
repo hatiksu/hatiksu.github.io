@@ -44,10 +44,43 @@
 }
 
 .ghost {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--surface);
   backdrop-filter: blur(8px);
 }
 
 .ghost:hover {
   border-color: var(--a1);
+}
+
+button.button {
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+
+.primary {
+  color: #fff;
+}
+
+.icon {
+  position: relative;
+  z-index: 1;
+  flex: none;
+}
+
+.withNote {
+  padding-block: 10px;
+}
+
+.withNote .label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.25;
+}
+
+.note {
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.75;
 }

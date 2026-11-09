@@ -1,9 +1,11 @@
 import { AnimatePresence, motion } from 'motion/react'
+import { usePreferences } from '../../../hooks/usePreferences'
 import { useScrollState } from '../../../hooks/useScrollState'
 import styles from './BackToTop.module.css'
 
 /** Кнопка «Наверх», появляется после прокрутки. */
 export function BackToTop() {
+  const { t } = usePreferences()
   const { y } = useScrollState()
   const visible = y > 700
 
@@ -13,7 +15,7 @@ export function BackToTop() {
         <motion.button
           type="button"
           className={styles.button}
-          aria-label="Наверх"
+          aria-label={t.nav.toTop}
           initial={{ opacity: 0, scale: 0.6, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.6, y: 20 }}

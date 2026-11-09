@@ -16,6 +16,14 @@
       rel="stylesheet"
     />
     <title>Hatiksu — разработчик</title>
+    <script>
+      // Тема до первой отрисовки, чтобы не было вспышки тёмного фона в светлой теме
+      try {
+        var t = localStorage.getItem('theme')
+        if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
+        document.documentElement.dataset.theme = t
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

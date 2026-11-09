@@ -1,3 +1,4 @@
+import { usePreferences } from '../../../hooks/usePreferences'
 import type { NavLink } from '../../../types'
 import styles from './Footer.module.css'
 
@@ -9,6 +10,7 @@ interface FooterProps {
 }
 
 export function Footer({ name, links }: FooterProps) {
+  const { t } = usePreferences()
   return (
     <footer className={styles.footer}>
       <div className={`container ${styles.inner}`}>
@@ -16,7 +18,7 @@ export function Footer({ name, links }: FooterProps) {
           {name}
           <span>.</span>
         </a>
-        <nav className={styles.links} aria-label="Навигация в подвале">
+        <nav className={styles.links} aria-label={t.nav.footer}>
           {links.map((l) => (
             <a key={l.id} href={`#${l.id}`}>
               {l.label}
@@ -24,7 +26,7 @@ export function Footer({ name, links }: FooterProps) {
           ))}
         </nav>
         <p className={styles.copy}>
-          © {YEAR} {name}. Сделано на React с душой.
+          © {YEAR} {name}. {t.footer.made}
         </p>
       </div>
     </footer>
