@@ -14,8 +14,9 @@ describe('parseRoute', () => {
     expect(parseRoute('')).toEqual({ page: 'home' })
     expect(parseRoute('#')).toEqual({ page: 'home' })
     expect(parseRoute('#projects')).toEqual({ page: 'home', section: 'projects' })
-    expect(parseRoute('#/unknown')).toEqual({ page: 'home' })
-    expect(parseRoute('#/project/<script>')).toEqual({ page: 'home' })
+    expect(parseRoute('#/')).toEqual({ page: 'home' })
+    expect(parseRoute('#/unknown')).toEqual({ page: 'notfound' })
+    expect(parseRoute('#/project/<script>')).toEqual({ page: 'notfound' })
   })
 })
 

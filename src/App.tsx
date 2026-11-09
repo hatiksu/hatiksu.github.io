@@ -16,6 +16,8 @@ import { Home } from './pages/Home/Home'
 
 // Страница проекта и палитра нужны не сразу — грузим их отдельными чанками
 const ProjectPage = lazy(() => import('./pages/ProjectPage/ProjectPage').then((m) => ({ default: m.ProjectPage })))
+const NotFound = lazy(() => import('./pages/NotFound/NotFound').then((m) => ({ default: m.NotFound })))
+const Terminal = lazy(() => import('./components/ui/Terminal/Terminal').then((m) => ({ default: m.Terminal })))
 const CommandPalette = lazy(() => import('./components/ui/CommandPalette/CommandPalette').then((m) => ({ default: m.CommandPalette })))
 
 function Shell() {
@@ -24,6 +26,8 @@ function Shell() {
   const [paletteOpen, setPaletteOpen] = useState(false)
   // Палитру монтируем после первого открытия, чтобы не грузить её код заранее
   const [paletteUsed, setPaletteUsed] = useState(false)
+  const [terminalOpen, setTerminalOpen] = useState(false)
+  const [terminalUsed, setTerminalUsed] = useState(false)
   const [playSlug, setPlaySlug] = useState<string | null>(null)
   const prevPage = useRef(route.page)
   const links = site.sections.map((id) => ({ id, label: t.nav[id] }))
@@ -32,7 +36,7 @@ function Shell() {
   useLayoutEffect(() => {
     const changedPage = prevPage.current !== route.page
     prevPage.current = route.page
-    if (route.page === 'project') {
+    if (route.page !== 'home') {
       window.scrollTo({ top: 0, behavior: 'instant' })
       return
     }
@@ -47,6 +51,13 @@ function Shell() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const typing = e.target instanceof HTMLElement && (e.target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName))
+      // ` (на русской раскладке — ё): терминал-пасхалка
+      if (e.code === 'Backquote' && !typing && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault()
+        setTerminalUsed(true)
+        setTerminalOpen((v) => !v)
+        return
+      }
       if ((e.key.toLowerCase() === 'k' && (e.metaKey || e.ctrlKey)) || (e.key === '/' && !typing)) {
         e.preventDefault()
         setPaletteUsed(true)
@@ -58,6 +69,11 @@ function Shell() {
   }, [])
 
   const closePalette = useCallback(() => setPaletteOpen(false), [])
+  const closeTerminal = useCallback(() => setTerminalOpen(false), [])
+  const openTerminal = useCallback(() => {
+    setTerminalUsed(true)
+    setTerminalOpen(true)
+  }, [])
   const play = useCallback((slug: string) => setPlaySlug(slug), [])
   const playing = playSlug ? site.projects.find((p) => p.slug === playSlug) : undefined
 
@@ -73,7 +89,7 @@ function Shell() {
       <LayoutGroup>
         <main>
           <Suspense fallback={<div style={{ minHeight: '100vh' }} />}>
-            {route.page === 'project' ? <ProjectPage key={route.slug} slug={route.slug} /> : <Home />}
+            {route.page === 'project' ? <ProjectPage key={route.slug} slug={route.slug} /> : route.page === 'notfound' ? <NotFound /> : <Home />}
           </Suspense>
         </main>
       </LayoutGroup>
@@ -81,7 +97,12 @@ function Shell() {
       <BackToTop />
       {paletteUsed && (
         <Suspense fallback={null}>
-          <CommandPalette open={paletteOpen} onClose={closePalette} onPlay={play} />
+          <CommandPalette open={paletteOpen} onClose={closePalette} onPlay={play} onTerminal={openTerminal} />
+        </Suspense>
+      )}
+      {terminalUsed && (
+        <Suspense fallback={null}>
+          <Terminal open={terminalOpen} onClose={closeTerminal} onPlay={play} />
         </Suspense>
       )}
       <PlayFrame

@@ -13,6 +13,7 @@ import { ReleaseList } from '../../components/project/ReleaseList/ReleaseList'
 import { Button } from '../../components/ui/Button/Button'
 import { Icon } from '../../components/ui/Icon/Icon'
 import { Reveal } from '../../components/ui/Reveal/Reveal'
+import { NotFound } from '../NotFound/NotFound'
 import styles from './ProjectPage.module.css'
 
 const fade = (delay = 0) => ({
@@ -27,17 +28,7 @@ export function ProjectPage({ slug }: { slug: string }) {
   const [playing, setPlaying] = useState(false)
   const index = site.projects.findIndex((p) => p.slug === slug)
 
-  if (index < 0) {
-    return (
-      <section className={`container ${styles.missing}`}>
-        <h1>{t.project.notFound}</h1>
-        <p>{t.project.notFoundText}</p>
-        <Button href="#top" variant="primary" icon="back">
-          {t.project.home}
-        </Button>
-      </section>
-    )
-  }
+  if (index < 0) return <NotFound title={t.project.notFound} text={t.project.notFoundText} />
 
   const project = localizeProject(site.projects[index], lang)
   const next = localizeProject(site.projects[(index + 1) % site.projects.length], lang)

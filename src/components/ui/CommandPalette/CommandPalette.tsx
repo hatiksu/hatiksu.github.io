@@ -24,15 +24,16 @@ interface CommandPaletteProps {
   onClose: () => void
   /** Открыть встроенное приложение проекта */
   onPlay: (slug: string) => void
+  onTerminal: () => void
 }
 
 /** Командная палитра (Ctrl+K / ⌘K): разделы, проекты и действия с поиском и управлением с клавиатуры */
-export function CommandPalette({ open, onClose, onPlay }: CommandPaletteProps) {
+export function CommandPalette({ open, onClose, onPlay, onTerminal }: CommandPaletteProps) {
   useLockBodyScroll(open)
-  return <AnimatePresence>{open && <Palette onClose={onClose} onPlay={onPlay} />}</AnimatePresence>
+  return <AnimatePresence>{open && <Palette onClose={onClose} onPlay={onPlay} onTerminal={onTerminal} />}</AnimatePresence>
 }
 
-function Palette({ onClose, onPlay }: Omit<CommandPaletteProps, 'open'>) {
+function Palette({ onClose, onPlay, onTerminal }: Omit<CommandPaletteProps, 'open'>) {
   const { t, lang, theme, toggleLang, toggleTheme } = usePreferences()
   const [query, setQueryState] = useState('')
   const [active, setActive] = useState(0)
@@ -105,6 +106,14 @@ function Palette({ onClose, onPlay }: Omit<CommandPaletteProps, 'open'>) {
         run: toggleTheme,
       },
       {
+        id: 'terminal',
+        group: t.palette.actions,
+        label: t.terminal.open,
+        keywords: 'terminal console консоль терминал cli',
+        icon: 'code',
+        run: onTerminal,
+      },
+      {
         id: 'lang',
         group: t.palette.actions,
         label: t.prefs.lang,
@@ -154,7 +163,7 @@ function Palette({ onClose, onPlay }: Omit<CommandPaletteProps, 'open'>) {
       ...actions,
       ...links,
     ]
-  }, [t, lang, theme, toggleLang, toggleTheme, onPlay])
+  }, [t, lang, theme, toggleLang, toggleTheme, onPlay, onTerminal])
 
   const results = useMemo(() => search(commands, query), [commands, query])
 

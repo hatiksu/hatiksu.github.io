@@ -135,4 +135,21 @@ export const en: Dict = {
   units: {
     mb: 'MB',
   },
+  notFound: {
+    title: 'This page got lost',
+    text: "There's no such page — but there are “404” bricks. Smash them all and we'll call the page found.",
+    hint: 'Mouse, finger or ← → · space to launch',
+    start: 'Tap to launch the ball',
+    won: 'Page found! 🎉 Again?',
+    lost: 'Ball lost. Try again?',
+    score: 'Score',
+    lives: 'Lives',
+    best: 'Best',
+    gameLabel: '“Smash 404” game',
+  },
+  terminal: {
+    title: 'Terminal',
+    input: 'Command',
+    open: 'Open terminal',
+  },
 }
