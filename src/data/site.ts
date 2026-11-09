@@ -27,7 +27,7 @@ const stack = [
 const projects: SiteConfig['projects'] = generated.projects as SiteConfig['projects']
 
 export const site: SiteConfig = {
-  name: 'Hatiksu',
+  name: 'Антон',
   status: 'Открыт к новым проектам',
   roles: ['Веб-разработчик', 'Фронтенд на React', 'Интегрирую ИИ в продукты', 'Делаю быстрые интерфейсы'],
   about:
@@ -60,7 +60,7 @@ export const site: SiteConfig = {
 
   contacts: {
     github: 'https://github.com/hatiksu',
-    email: '', // например: 'me@example.com'
-    telegram: '', // например: 'https://t.me/username'
+    email: 'hatiksuofficial@gmail.com',
+    telegram: 'https://t.me/whoareyou_q',
   },
 }
