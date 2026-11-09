@@ -124,9 +124,12 @@ test('форма «Написать мне»: проверка полей и о�
 test('терминал: ` открывает, команды работают', async ({ page, isMobile }) => {
   test.skip(isMobile, 'на телефоне нет клавиатуры — терминал открывается из палитры')
   await page.goto('./')
+  // Горячие клавиши вешаются вместе с первой отрисовкой — ждём, пока страница появится
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
   await page.keyboard.press('Backquote')
   const term = page.getByRole('dialog', { name: 'Терминал' })
-  await expect(term).toBeVisible()
+  // Код терминала грузится отдельным чанком при первом открытии
+  await expect(term).toBeVisible({ timeout: 15_000 })
   const input = term.getByRole('textbox', { name: 'Команда' })
   await input.fill('projects')
   await input.press('Enter')

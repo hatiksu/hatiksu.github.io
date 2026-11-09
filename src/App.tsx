@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useCallback, useLayoutEffect, useRef, useState } from 'react'
 import { LayoutGroup, MotionConfig } from 'motion/react'
 import { site } from './data/site'
 import { PreferencesProvider } from './context/PreferencesProvider'
@@ -47,8 +47,9 @@ function Shell() {
     } else if (changedPage) window.scrollTo({ top: 0, behavior: 'instant' })
   }, [route])
 
-  // Ctrl+K / ⌘K и «/» — командная палитра
-  useEffect(() => {
+  // Ctrl+K / ⌘K и «/» — командная палитра, ` — терминал.
+  // useLayoutEffect: клавиши работают сразу, как только страница отрисовалась
+  useLayoutEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const typing = e.target instanceof HTMLElement && (e.target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName))
       // ` (на русской раскладке — ё): терминал-пасхалка
