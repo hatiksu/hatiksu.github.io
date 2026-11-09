@@ -1,5 +1,6 @@
 // Данные сайта: всё, что нужно менять, — здесь.
 import type { SiteConfig } from '../types'
+import generated from './projects.generated.json'
 
 const stack = [
   { name: 'React', color: '#61dafb' },
@@ -21,32 +22,9 @@ const stack = [
   { name: 'Playwright', color: '#2ead33' },
 ]
 
-const projects: SiteConfig['projects'] = [
-  {
-    mockup: 'finance',
-    title: 'Финансовый трекер с ИИ',
-    text: 'Мобильное PWA-приложение для учёта доходов и расходов: ставится на телефон, работает без интернета, а ИИ помогает вводить траты и разбирать месяц.',
-    tags: ['React', 'TypeScript', 'PWA', 'IndexedDB', 'Claude API'],
-    points: [
-      'Траты одной строкой: «кофе 350», «такси 420 вчера» — сумма, дата и категория распознаются сами',
-      'ИИ разбирает сложные фразы на несколько операций и анализирует месяц',
-      'Бюджеты, графики, прогноз; данные хранятся только на устройстве',
-    ],
-    code: 'https://github.com/hatiksu/Claude-Code/tree/feature/finance-tracker',
-  },
-  {
-    mockup: 'editor',
-    title: 'Фоторедактор с ИИ',
-    text: 'Мобильный фоторедактор с нейросетями: удаляет фон прямо на телефоне, сам улучшает фото и понимает правки текстом через Claude. Ставится как приложение и работает без интернета.',
-    tags: ['React', 'TypeScript', 'Web Workers', 'Canvas', 'Claude API', 'PWA'],
-    points: [
-      'Удаление фона нейросетью на устройстве — фото не уходит на сервер',
-      'ИИ-ассистент: «сделай как на закате» → готовые настройки и подпись',
-      'Жесты: щипок, двойной тап, удержание для сравнения; обработка в Web Worker',
-    ],
-    code: 'https://github.com/hatiksu/Claude-Code/tree/feature/ai-photo-editor',
-  },
-]
+// Проекты подтягиваются автоматически: скрипт npm run sync находит файлы portfolio.json
+// в репозиториях на GitHub и записывает их сюда. Вручную этот список не правим.
+const projects: SiteConfig['projects'] = generated.projects as SiteConfig['projects']
 
 export const site: SiteConfig = {
   name: 'Hatiksu',

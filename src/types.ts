@@ -21,16 +21,8 @@ export interface Tech {
   color: string
 }
 
-export interface Project {
-  /** Какой схематичный макет показать в карточке */
-  mockup: 'editor' | 'finance'
-  title: string
-  text: string
-  tags: string[]
-  points: string[]
-  demo?: string
-  code?: string
-}
+/** Карточка проекта — собирается автоматически из файлов portfolio.json (см. scripts/sync-projects.ts) */
+export type { PortfolioProject as Project } from './lib/projects'
 
 export interface Contacts {
   github: string
@@ -38,6 +30,8 @@ export interface Contacts {
   email: string
   telegram: string
 }
+
+import type { PortfolioProject } from './lib/projects'
 
 export interface SiteConfig {
   name: string
@@ -48,6 +42,6 @@ export interface SiteConfig {
   stats: Stat[]
   skills: Skill[]
   stack: Tech[]
-  projects: Project[]
+  projects: PortfolioProject[]
   contacts: Contacts
 }

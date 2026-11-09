@@ -27,8 +27,15 @@ export function CountUp({ value, suffix = '', duration = 1.6 }: CountUpProps) {
 
   return (
     <span ref={ref}>
-      {display}
-      {suffix}
+      {/* Анимированное число — для глаз, настоящее значение — для программ чтения с экрана */}
+      <span aria-hidden="true">
+        {display}
+        {suffix}
+      </span>
+      <span className="visually-hidden">
+        {value}
+        {suffix}
+      </span>
     </span>
   )
 }

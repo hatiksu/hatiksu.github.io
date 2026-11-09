@@ -1,0 +1,55 @@
+.card {
+  width: min(260px, 70%);
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  padding: 32px 24px;
+  border-radius: 24px;
+  background: rgba(15, 17, 21, 0.85);
+  border: 1px solid #2a2f3a;
+  box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.8);
+  transform: perspective(1000px) rotateY(-10deg) rotateX(6deg);
+  transition: transform 0.7s var(--ease-out);
+}
+
+:global(article):hover .card {
+  transform: perspective(1000px) rotateY(0) rotateX(0);
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+  border-radius: 24px;
+  font-size: 44px;
+  background: linear-gradient(135deg, var(--a1), var(--a2));
+  box-shadow: 0 16px 40px -12px var(--a1);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 15px;
+  text-align: center;
+}
+
+.lines {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+}
+
+.lines i {
+  display: block;
+  height: 8px;
+  border-radius: 4px;
+  background: #2a2f3a;
+}
+
+.lines i:nth-child(2) {
+  width: 80%;
+}
+
+.lines i:nth-child(3) {
+  width: 60%;
+}

@@ -3,7 +3,14 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  # Раз в день сайт пересобирается и подтягивает новые проекты (portfolio.json)
+  schedule:
+    - cron: '17 4 * * *'
+  # Ручной запуск: Actions → Deploy to GitHub Pages → Run workflow
   workflow_dispatch:
+  # Внешний сигнал «проекты обновились» (например, из другого репозитория)
+  repository_dispatch:
+    types: [projects-updated]
 
 permissions:
   contents: read
@@ -23,8 +30,11 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: package-lock.json
       - run: npm ci
+      - name: Подтянуть проекты из portfolio.json
+        run: npm run sync
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: npm run build
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
