@@ -1,14 +1,16 @@
 name: Deploy to GitHub Pages
 
+# Сборка сайта: свежие проекты и статистика с GitHub, встроенные приложения со скриншотами,
+# картинки превью — и публикация на https://hatiksu.github.io
 on:
   push:
     branches: [main]
-  # Раз в день сайт пересобирается и подтягивает новые проекты (portfolio.json)
+  # Раз в день сайт пересобирается и подтягивает новые проекты, релизы и активность
   schedule:
     - cron: '17 4 * * *'
   # Ручной запуск: Actions → Deploy to GitHub Pages → Run workflow
   workflow_dispatch:
-  # Внешний сигнал «проекты обновились» (например, из другого репозитория)
+  # Внешний сигнал «проекты обновились» (например, из репозитория приложения)
   repository_dispatch:
     types: [projects-updated]
 
@@ -22,7 +24,26 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  pages:
+    name: Включены ли Pages
+    runs-on: ubuntu-latest
+    outputs:
+      enabled: ${{ steps.pages.outputs.enabled }}
+    steps:
+      - id: pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh api "repos/${{ github.repository }}/pages" > /dev/null 2>&1; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::GitHub Pages не включены: Settings → Pages → Source: GitHub Actions"
+          fi
+
   build:
+    needs: pages
+    if: needs.pages.outputs.enabled == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -31,10 +52,16 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Подтянуть проекты из portfolio.json
+      - name: Браузер для скриншотов
+        run: npx playwright install --with-deps chromium
+      - name: Проекты, релизы и активность с GitHub
         run: npm run sync
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Встроенные приложения и скриншоты
+        run: npm run apps
+      - name: Картинки превью
+        run: npm run og
       - run: npm run build
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

@@ -1,61 +1,72 @@
 # Сайт-портфолио Hatiksu
 
-Личный сайт-визитка на **React**: кто я, что умею, на чём пишу и что уже сделал.
+**https://hatiksu.github.io** — личный сайт: кто я, что умею и что уже сделал. Проекты можно попробовать
+прямо на сайте или скачать для Windows.
 
-**Стек:** React 19 · TypeScript · Vite · Motion (анимации) · CSS Modules
+**Стек:** React 19 · TypeScript · Vite · Motion · WebGL · CSS Modules · Playwright · Vitest
 
 ## Возможности
 
-- Адаптивная вёрстка, на мобильных — бургер-меню с полноэкранным раскрытием
-- Анимации: побуквенное появление заголовка, печатающийся текст, параллакс первого экрана,
-  появление блоков при прокрутке, счётчики, 3D-наклон карточек, бегущая лента технологий,
-  «магнитные» кнопки, прожектор за курсором, вращающаяся градиентная рамка
-- Шапка прячется при прокрутке вниз, активный раздел подсвечивается
-- Полоса прогресса прокрутки и кнопка «Наверх»
-- Доступность: навигация с клавиатуры, `aria`-атрибуты, учёт настройки «уменьшить движение»
+- **Страница у каждого проекта** (`#/project/<slug>`): скриншоты компьютера и телефона, фишки, факты о версии,
+  история релизов с заметками, переход к следующему проекту, кнопка «Поделиться».
+- **«Играть тут»:** приложения собираются прямо в сайт (`public/apps/<slug>`) и открываются поверх страницы —
+  без перехода куда-либо.
+- **«Скачать для Windows»:** версия, размер и число скачиваний берутся из последнего релиза репозитория проекта.
+- **Автоскриншоты:** Playwright сам открывает каждое приложение и снимает экраны (JPEG + лёгкий WebP).
+- **WebGL-фон:** шейдерная «туманность» тянется за курсором и реагирует на наклон телефона; без WebGL — CSS-фон,
+  при «уменьшить движение» — статичный кадр, во вкладке на фоне не рисуется.
+- **Командная палитра** `Ctrl+K` / `⌘K` / `/`: разделы, проекты, «запустить», «скачать», тема, язык, почта.
+- **Активность на GitHub:** карта коммитов за год, лучшая серия, языки в проектах, релизы.
+- **RU / EN** (по языку браузера, переключатель запоминается) и **светлая тема** (по системе, с плавной сменой).
+- **Превью для ссылок:** своя картинка 1200×630 для сайта и каждого проекта, страницы `p/<slug>/` для мессенджеров,
+  `sitemap.xml`, `robots.txt`.
+- Адаптивность и бургер-меню, анимации появления, магнитные кнопки, 3D-наклон, доступность с клавиатуры.
+
+Lighthouse: компьютер — 99 / 100 / 100 / 100, телефон — 87 / 100 / 100 / 100
+(производительность / доступность / лучшие практики / SEO).
 
 ## Команды
 
 ```bash
-npm install      # установить зависимости
-npm run dev      # dev-сервер с горячей перезагрузкой
-npm run build    # проверка типов и сборка в dist/
-npm run preview  # посмотреть собранную версию
+npm install      # зависимости
+npm run dev      # dev-сервер
+npm run sync     # проекты, релизы и активность с GitHub → src/data/*.generated.json
+npm run apps     # собрать приложения внутрь сайта и снять скриншоты (--force, --no-shots)
+npm run og       # картинки превью public/og/*.jpg
+npm run build    # проверка типов, сборка, страницы для шаринга и sitemap
 npm run lint     # линтер
-npm run sync     # подтянуть проекты с GitHub (portfolio.json)
 npm test         # unit-тесты (Vitest)
-npm run test:e2e # E2E-тесты на компьютере и телефоне (Playwright)
+npm run test:e2e # E2E на компьютере и iPhone (Playwright)
 ```
 
 ## Структура
 
 ```
-scripts/sync-projects.ts    синхронизация проектов с GitHub (portfolio.json)
-e2e/                        E2E-тесты (Playwright)
+scripts/
+├── sync-projects.ts   portfolio.json, релизы, языки и коммиты с GitHub
+├── build-apps.ts      клон → сборка (DESKTOP=1, без Service Worker) → public/apps + скриншоты
+├── og.ts              картинки превью
+└── share-pages.ts     dist/p/<slug>/index.html и sitemap.xml после сборки
 src/
-├── data/site.ts            ДАННЫЕ: имя, навыки, стек, контакты
-├── data/projects.generated.json  проекты — создаётся автоматически, руками не править
-├── lib/projects.ts         разбор и проверка portfolio.json
-├── types.ts                типы данных
-├── App.tsx                 сборка страницы из секций
-├── main.tsx                точка входа
-├── styles/global.css       переменные темы, сброс стилей
-├── hooks/                  useScrollSpy, useScrollState, useTyping, useLockBodyScroll
+├── App.tsx            оболочка: маршрут, палитра, окно приложения
+├── pages/             Home, ProjectPage
+├── i18n/              ru.ts, en.ts — все тексты сайта
+├── context/           язык и тема
+├── data/              site.ts + *.generated.json (создаются скриптами, руками не править)
+├── lib/               projects, github, router, search, markdown, shader, format, prefs, toast (+ тесты)
+├── hooks/             usePreferences, useRoute, useScrollSpy, useScrollState, useTyping, …
 └── components/
-    ├── layout/             Navbar, Burger, MobileMenu, Footer
-    ├── sections/           Hero, Stats, Skills, Stack, Projects, Contact
-    └── ui/                 Button, Reveal, TiltCard, CountUp, Background, ScrollProgress, …
+    ├── layout/        Navbar, Burger, MobileMenu, Footer
+    ├── sections/      Hero, Stats, Skills, Stack, Projects, Activity, Contact
+    ├── project/       ProjectShot, DownloadButton, PlayFrame, ReleaseList
+    └── ui/            Button, Icon, CommandPalette, PrefsToggles, Background, Toaster, …
 ```
 
 У каждого компонента своя папка: `Component.tsx` + `Component.module.css`.
 
-## Как поменять содержимое
+## Как проект попадает на сайт
 
-Тексты о себе (имя, навыки, стек, контакты) лежат в `src/data/site.ts`, вёрстку трогать не нужно.
-
-## Проекты подтягиваются автоматически
-
-Вручную список проектов не ведётся. Достаточно положить в корень проекта файл `portfolio.json`:
+Вручную список не ведётся. В корне репозитория проекта лежит `portfolio.json`:
 
 ```json
 {
@@ -63,30 +74,22 @@ src/
   "description": "Что это и зачем",
   "tags": ["React", "TypeScript"],
   "highlights": ["Главная фишка", "Ещё одна"],
+  "code": "https://github.com/hatiksu/<repo>",
   "mockup": "generic",
-  "icon": "🤖"
+  "icon": "🤖",
+  "order": 1,
+  "shot": { "click": "Текст кнопки, которую нажать перед скриншотом" },
+  "en": { "title": "Name", "description": "What it is", "highlights": ["Main feature"] }
 }
 ```
 
-Скрипт `scripts/sync-projects.ts` (`npm run sync`) обходит все ветки этого репозитория и основные ветки
-публичных репозиториев владельца, находит такие файлы и записывает `src/data/projects.generated.json`.
-Проекты без `portfolio.json` (например, лабораторные) на сайт не попадают.
-
-На GitHub Pages синхронизация запускается перед каждой сборкой: при пуше в `main`, раз в день по расписанию
-и вручную (Actions → Deploy to GitHub Pages → Run workflow). Если GitHub недоступен, сайт собирается
-с прошлой версией списка.
-
-> Ссылка «Код на GitHub» показывается только для публичных репозиториев: на приватный посетители не попадут.
-
-## Тесты
-
-- **Unit (Vitest):** разбор и проверка `portfolio.json` (обязательные поля, только https-ссылки, лимиты),
-  объединение одного проекта из разных веток, сортировка.
-- **E2E (Playwright, компьютер и iPhone 13):** первый экран, проекты из `portfolio.json`, счётчики,
-  бургер-меню (открытие, переход к разделу, Esc), подсветка активного раздела, отсутствие горизонтальной прокрутки.
-- **CI:** `.github/workflows/ci.yml` на каждый пуш и PR запускает линтер, проверку типов, сборку и все тесты.
+`npm run sync` обходит основные ветки публичных репозиториев владельца (и ветки этого репозитория),
+находит такие файлы, подтягивает релизы и статистику. `npm run apps` собирает каждый проект в сайт и снимает скриншоты.
 
 ## Деплой
 
-Workflow `.github/workflows/deploy.yml` собирает сайт и публикует его на GitHub Pages
-при каждом пуше в `main`. Один раз включите Pages: **Settings → Pages → Source: GitHub Actions**.
+`.github/workflows/deploy.yml` при пуше в `main`, раз в день и по кнопке «Run workflow» делает
+`sync → apps → og → build` и публикует сайт на GitHub Pages. Один раз включите
+**Settings → Pages → Source: GitHub Actions** — до этого сборка пропускается с подсказкой.
+
+`.github/workflows/ci.yml` на каждый пуш и PR: линтер, типы, сборка, unit- и E2E-тесты.
