@@ -4,6 +4,7 @@ import type { Contacts, NavLink } from '../../../types'
 import { useLockBodyScroll } from '../../../hooks/useLockBodyScroll'
 import { usePreferences } from '../../../hooks/usePreferences'
 import { PrefsToggles } from '../../ui/PrefsToggles/PrefsToggles'
+import { copyEmail } from '../../../lib/toast'
 import styles from './MobileMenu.module.css'
 
 interface MobileMenuProps {
@@ -85,11 +86,18 @@ export function MobileMenu({ id, open, links, active, contacts, onClose }: Mobil
           </nav>
           <motion.div className={styles.footer} variants={item}>
             <PrefsToggles />
-            {socials.map((s) => (
-              <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer">
-                {s.label} ↗
-              </a>
-            ))}
+            {socials.map((s) =>
+              s.href.startsWith('mailto:') ? (
+                // mailto: — без новой вкладки: на телефоне в новой вкладке она часто не срабатывает
+                <a key={s.label} href={s.href} onClick={() => copyEmail(contacts.email, t.contact.mailCopied)}>
+                  {s.label} ↗
+                </a>
+              ) : (
+                <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer">
+                  {s.label} ↗
+                </a>
+              ),
+            )}
           </motion.div>
         </motion.div>
       )}

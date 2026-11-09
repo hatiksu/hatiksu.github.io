@@ -121,6 +121,20 @@ test('форма «Написать мне»: проверка полей и о�
   expect(sent[0]).toMatchObject({ name: 'Анна', contact: 'anna@example.com', _replyto: 'anna@example.com', _honey: '' })
 })
 
+test('«Написать на почту» показывает адрес, даже если почтового приложения нет', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']).catch(() => undefined)
+  // Перехватываем переход по mailto:, чтобы страница не уходила
+  await page.addInitScript(() => {
+    document.addEventListener('click', (e) => {
+      const a = (e.target as Element).closest('a[href^="mailto:"]')
+      if (a) e.preventDefault()
+    })
+  })
+  await page.goto('./#contact')
+  await page.locator('#contact').getByRole('link', { name: /Написать на почту/ }).click()
+  await expect(page.getByRole('status').filter({ hasText: 'hatiksuofficial@gmail.com' })).toBeVisible()
+})
+
 test('терминал: ` открывает, команды работают', async ({ page, isMobile }) => {
   test.skip(isMobile, 'на телефоне нет клавиатуры — терминал открывается из палитры')
   await page.goto('./')

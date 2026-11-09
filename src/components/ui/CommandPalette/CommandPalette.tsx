@@ -6,7 +6,7 @@ import { usePreferences } from '../../../hooks/usePreferences'
 import { latestInstaller, localizeProject } from '../../../lib/projects'
 import { projectHref } from '../../../lib/router'
 import { search } from '../../../lib/search'
-import { copyText, toast } from '../../../lib/toast'
+import { copyEmail, copyText, toast } from '../../../lib/toast'
 import { Icon, type IconName } from '../Icon/Icon'
 import styles from './CommandPalette.module.css'
 
@@ -153,7 +153,10 @@ function Palette({ onClose, onPlay, onTerminal }: Omit<CommandPaletteProps, 'ope
         label: t.nav.mail,
         keywords: 'email',
         icon: 'mail',
-        run: () => (location.href = `mailto:${site.contacts.email}`),
+        run: () => {
+          copyEmail(site.contacts.email, t.contact.mailCopied)
+          location.href = `mailto:${site.contacts.email}`
+        },
       },
     ]
     return [

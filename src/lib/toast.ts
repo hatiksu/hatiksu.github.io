@@ -20,3 +20,12 @@ export async function copyText(text: string): Promise<boolean> {
     return false
   }
 }
+
+/**
+ * Нажатие на «Написать на почту»: адрес сразу копируется и показывается в уведомлении.
+ * На телефоне без настроенного почтового приложения (или во встроенном браузере Telegram/Instagram)
+ * ссылка mailto: ничего не открывает — так посетитель всё равно получит адрес.
+ */
+export function copyEmail(email: string, message: (email: string) => string) {
+  void copyText(email).then((ok) => toast(ok ? message(email) : email))
+}

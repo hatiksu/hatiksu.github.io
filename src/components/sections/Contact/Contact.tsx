@@ -3,6 +3,7 @@ import type { Contacts } from '../../../types'
 import { Button } from '../../ui/Button/Button'
 import { Reveal } from '../../ui/Reveal/Reveal'
 import { site } from '../../../data/site'
+import { copyEmail } from '../../../lib/toast'
 import { ContactForm } from './ContactForm/ContactForm'
 import styles from './Contact.module.css'
 
@@ -29,7 +30,11 @@ export function Contact({ contacts }: { contacts: Contacts }) {
             )}
             <div className={styles.actions}>
               {hasEmail && (
-                <Button href={`mailto:${contacts.email}`} variant={site.contactEndpoint ? 'ghost' : 'primary'}>
+                <Button
+                  href={`mailto:${contacts.email}`}
+                  variant={site.contactEndpoint ? 'ghost' : 'primary'}
+                  onClick={() => copyEmail(contacts.email, t.contact.mailCopied)}
+                >
                   {t.contact.mail}
                 </Button>
               )}

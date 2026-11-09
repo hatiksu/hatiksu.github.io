@@ -114,6 +114,7 @@ export const en: Dict = {
     accent: "Let's build it",
     text: "Open to projects, collaborations and interesting challenges. Drop me a line — I'll reply quickly.",
     mail: '✉ Send an email',
+    mailCopied: (email: string) => `Email copied: ${email}`,
     or: 'or directly',
     form: {
       name: 'Your name',
