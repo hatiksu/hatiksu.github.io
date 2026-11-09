@@ -1,30 +1,9 @@
 {
-  "generatedAt": "2026-11-09T11:33:30.974Z",
+  "generatedAt": "2026-11-09T11:51:30.538Z",
   "projects": [
     {
-      "id": "hatiksu/Claude-Code@feature/orbit-game",
-      "title": "Орбита — аркада в одно касание",
-      "text": "Неоновая браузерная игра на Canvas: перепрыгивай с орбиты на орбиту, лови идеальные входы ради комбо, собирай звёзды и обходи астероиды. Работает на телефоне и без интернета.",
-      "tags": [
-        "TypeScript",
-        "Canvas 2D",
-        "React",
-        "Web Audio",
-        "PWA"
-      ],
-      "points": [
-        "Свой детерминированный движок с фиксированным шагом физики — проходимость уровней проверяет бот в тестах",
-        "Неон без тормозов на телефоне: спрайты свечения вместо shadowBlur, частицы, параллакс, тряска",
-        "Звуки синтезируются Web Audio прямо в браузере — без аудиофайлов"
-      ],
-      "mockup": "generic",
-      "icon": "🪐",
-      "code": "https://github.com/hatiksu/orbit-game",
-      "updatedAt": "2026-11-09T11:32:21Z",
-      "order": 1
-    },
-    {
-      "id": "hatiksu/Claude-Code@feature/finance-tracker",
+      "id": "hatiksu/finance-tracker@main",
+      "slug": "finance-tracker",
       "title": "Финансовый трекер с ИИ",
       "text": "Мобильное PWA-приложение для учёта доходов и расходов: ставится на телефон, работает без интернета, а ИИ помогает вводить траты и разбирать месяц.",
       "tags": [
@@ -42,33 +21,83 @@
       "mockup": "finance",
       "icon": "🚀",
       "code": "https://github.com/hatiksu/finance-tracker",
-      "updatedAt": "2026-11-09T11:32:19Z",
-      "order": 1
+      "repo": "hatiksu/finance-tracker",
+      "en": {
+        "title": "AI Finance Tracker",
+        "text": "A mobile PWA for tracking income and expenses: installs on your phone, works offline, and AI helps you log spending and review the month.",
+        "points": [
+          "Log expenses in one line: “coffee 350”, “taxi 420 yesterday” — amount, date and category are detected automatically",
+          "AI splits complex phrases into several transactions and analyses your month",
+          "Budgets, charts and a forecast; your data never leaves the device"
+        ]
+      },
+      "updatedAt": "2026-11-09T11:50:45Z",
+      "order": 1,
+      "releases": [
+        {
+          "tag": "v1.0.0",
+          "name": "v1.0.0",
+          "publishedAt": "2026-11-09T11:34:56Z",
+          "notes": "## Установка\n\n1. Скачайте `finance-tracker-Setup-1.0.0.exe` ниже и запустите.\n2. Если Windows покажет «Система Windows защитила ваш компьютер» — нажмите **Подробнее → Выполнить в любом случае**. Установщик не подписан платным сертификатом, поэтому SmartScreen его не знает.\n3. Выберите папку — ярлык «Финансы» появится на рабочем столе и в меню «Пуск».\n\nWindows 10 и 11, 64 бита.",
+          "installer": {
+            "name": "finance-tracker-Setup-1.0.0.exe",
+            "url": "https://github.com/hatiksu/finance-tracker/releases/download/v1.0.0/finance-tracker-Setup-1.0.0.exe",
+            "size": 120876666,
+            "downloads": 2
+          }
+        }
+      ]
     },
     {
-      "id": "hatiksu/Claude-Code@feature/prism-puzzle",
-      "title": "Призма — головоломка со светом",
-      "text": "Поворачивай зеркала и светоделители, смешивай цветные лучи и зажигай кристаллы нужным цветом. 24 уровня, звёзды за минимум ходов, подсказки. Работает на телефоне и без интернета.",
+      "id": "hatiksu/orbit-game@main",
+      "slug": "orbit-game",
+      "title": "Орбита — аркада в одно касание",
+      "text": "Неоновая браузерная игра на Canvas: перепрыгивай с орбиты на орбиту, лови идеальные входы ради комбо, собирай звёзды и обходи астероиды. Работает на телефоне и без интернета.",
       "tags": [
         "TypeScript",
+        "Canvas 2D",
         "React",
-        "SVG",
-        "Алгоритмы",
+        "Web Audio",
         "PWA"
       ],
       "points": [
-        "Уровни строит генератор, а решатель перебором доказывает решаемость и считает минимум ходов",
-        "Подсказки и звёзды — от решателя: он знает ближайшее решение из любой позиции",
-        "Цветные лучи на SVG смешиваются как настоящий свет: красный + синий = пурпурный"
+        "Свой детерминированный движок с фиксированным шагом физики — проходимость уровней проверяет бот в тестах",
+        "Неон без тормозов на телефоне: спрайты свечения вместо shadowBlur, частицы, параллакс, тряска",
+        "Звуки синтезируются Web Audio прямо в браузере — без аудиофайлов"
       ],
       "mockup": "generic",
-      "icon": "🔺",
-      "code": "https://github.com/hatiksu/prism-puzzle",
-      "updatedAt": "2026-11-09T11:32:21Z",
-      "order": 2
+      "icon": "🪐",
+      "code": "https://github.com/hatiksu/orbit-game",
+      "repo": "hatiksu/orbit-game",
+      "en": {
+        "title": "Orbit — a one-tap arcade",
+        "text": "A neon browser game on Canvas: jump from orbit to orbit, nail perfect entries for combos, collect stars and dodge asteroids. Works on phones and offline.",
+        "points": [
+          "Custom deterministic engine with a fixed physics step — a bot in the tests proves every level is passable",
+          "Smooth neon on phones: glow sprites instead of shadowBlur, particles, parallax, screen shake",
+          "Sounds are synthesised with Web Audio right in the browser — no audio files"
+        ]
+      },
+      "updatedAt": "2026-11-09T11:50:45Z",
+      "order": 1,
+      "releases": [
+        {
+          "tag": "v1.0.0",
+          "name": "v1.0.0",
+          "publishedAt": "2026-11-09T11:35:34Z",
+          "notes": "## Установка\n\n1. Скачайте `orbit-game-Setup-1.0.0.exe` ниже и запустите.\n2. Если Windows покажет «Система Windows защитила ваш компьютер» — нажмите **Подробнее → Выполнить в любом случае**. Установщик не подписан платным сертификатом, поэтому SmartScreen его не знает.\n3. Выберите папку — ярлык «Орбита» появится на рабочем столе и в меню «Пуск».\n\nWindows 10 и 11, 64 бита.",
+          "installer": {
+            "name": "orbit-game-Setup-1.0.0.exe",
+            "url": "https://github.com/hatiksu/orbit-game/releases/download/v1.0.0/orbit-game-Setup-1.0.0.exe",
+            "size": 121001953,
+            "downloads": 2
+          }
+        }
+      ]
     },
     {
-      "id": "hatiksu/Claude-Code@feature/ai-photo-editor",
+      "id": "hatiksu/ai-photo-editor@main",
+      "slug": "ai-photo-editor",
       "title": "Фоторедактор с ИИ",
       "text": "Мобильный фоторедактор с нейросетями: удаляет фон прямо на телефоне, сам улучшает фото и понимает правки текстом через Claude. Ставится как приложение и работает без интернета.",
       "tags": [
@@ -87,8 +116,79 @@
       "mockup": "editor",
       "icon": "🚀",
       "code": "https://github.com/hatiksu/ai-photo-editor",
-      "updatedAt": "2026-11-09T11:32:20Z",
-      "order": 2
+      "repo": "hatiksu/ai-photo-editor",
+      "en": {
+        "title": "AI Photo Editor",
+        "text": "A mobile photo editor powered by neural networks: removes backgrounds right on the phone, enhances photos automatically and understands edits in plain words via Claude. Installs like an app and works offline.",
+        "points": [
+          "On-device background removal — your photo never goes to a server",
+          "AI assistant: “make it look like sunset” → ready-made adjustments and a caption",
+          "Gestures: pinch, double tap, hold to compare; processing runs in a Web Worker"
+        ]
+      },
+      "updatedAt": "2026-11-09T11:50:45Z",
+      "order": 2,
+      "releases": [
+        {
+          "tag": "v2.0.0",
+          "name": "v2.0.0",
+          "publishedAt": "2026-11-09T11:35:31Z",
+          "notes": "## Установка\n\n1. Скачайте `ai-photo-editor-Setup-2.0.0.exe` ниже и запустите.\n2. Если Windows покажет «Система Windows защитила ваш компьютер» — нажмите **Подробнее → Выполнить в любом случае**. Установщик не подписан платным сертификатом, поэтому SmartScreen его не знает.\n3. Выберите папку — ярлык «Фоторедактор с ИИ» появится на рабочем столе и в меню «Пуск».\n\nWindows 10 и 11, 64 бита.",
+          "installer": {
+            "name": "ai-photo-editor-Setup-2.0.0.exe",
+            "url": "https://github.com/hatiksu/ai-photo-editor/releases/download/v2.0.0/ai-photo-editor-Setup-2.0.0.exe",
+            "size": 120872600,
+            "downloads": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "hatiksu/prism-puzzle@main",
+      "slug": "prism-puzzle",
+      "title": "Призма — головоломка со светом",
+      "text": "Поворачивай зеркала и светоделители, смешивай цветные лучи и зажигай кристаллы нужным цветом. 24 уровня, звёзды за минимум ходов, подсказки. Работает на телефоне и без интернета.",
+      "tags": [
+        "TypeScript",
+        "React",
+        "SVG",
+        "Алгоритмы",
+        "PWA"
+      ],
+      "points": [
+        "Уровни строит генератор, а решатель перебором доказывает решаемость и считает минимум ходов",
+        "Подсказки и звёзды — от решателя: он знает ближайшее решение из любой позиции",
+        "Цветные лучи на SVG смешиваются как настоящий свет: красный + синий = пурпурный"
+      ],
+      "mockup": "generic",
+      "icon": "🔺",
+      "code": "https://github.com/hatiksu/prism-puzzle",
+      "repo": "hatiksu/prism-puzzle",
+      "en": {
+        "title": "Prism — a light puzzle",
+        "text": "Rotate mirrors and beam splitters, mix coloured rays and light up crystals in the right colour. 24 levels, stars for the fewest moves, hints. Works on phones and offline.",
+        "points": [
+          "Levels come from a generator, and a brute-force solver proves each is solvable and counts the minimum moves",
+          "Hints and stars come from the solver: it knows the nearest solution from any position",
+          "Coloured SVG rays mix like real light: red + blue = magenta"
+        ]
+      },
+      "updatedAt": "2026-11-09T11:50:45Z",
+      "order": 2,
+      "releases": [
+        {
+          "tag": "v1.0.0",
+          "name": "v1.0.0",
+          "publishedAt": "2026-11-09T11:35:31Z",
+          "notes": "## Установка\n\n1. Скачайте `prism-puzzle-Setup-1.0.0.exe` ниже и запустите.\n2. Если Windows покажет «Система Windows защитила ваш компьютер» — нажмите **Подробнее → Выполнить в любом случае**. Установщик не подписан платным сертификатом, поэтому SmartScreen его не знает.\n3. Выберите папку — ярлык «Призма» появится на рабочем столе и в меню «Пуск».\n\nWindows 10 и 11, 64 бита.",
+          "installer": {
+            "name": "prism-puzzle-Setup-1.0.0.exe",
+            "url": "https://github.com/hatiksu/prism-puzzle/releases/download/v1.0.0/prism-puzzle-Setup-1.0.0.exe",
+            "size": 120933606,
+            "downloads": 2
+          }
+        }
+      ]
     }
   ]
 }
