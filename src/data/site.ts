@@ -27,7 +27,7 @@ const stack = [
 const projects: SiteConfig['projects'] = generated.projects as SiteConfig['projects']
 
 export const site: SiteConfig = {
-  name: 'Антон',
+  name: 'Hatiksu',
   status: 'Открыт к новым проектам',
   roles: ['Веб-разработчик', 'Фронтенд на React', 'Интегрирую ИИ в продукты', 'Делаю быстрые интерфейсы'],
   about:
