@@ -10,6 +10,7 @@ const ctx: TermContext = {
     { slug: 'orbit-game', title: 'Орбита', aliases: ['Орбита — аркада', 'Orbit — a one-tap arcade'], tags: [], playable: true, download: { url: 'https://x/orbit.exe', tag: 'v1.0.0' } },
     { slug: 'prism-puzzle', title: 'Призма', aliases: ['Призма', 'Prism'], tags: [], playable: true },
     { slug: 'portfolio', title: 'Портфолио', aliases: ['Портфолио'], tags: [], playable: false },
+    { slug: 'schedule-bot', title: 'Бот расписания', aliases: ['Бот расписания', 'Schedule bot'], tags: [], playable: false, telegram: 'https://t.me/demo_bot' },
   ],
 }
 
@@ -44,6 +45,11 @@ describe('runCommand', () => {
     const unknown = runCommand('orbit', ctx).lines.map((l) => l.text)
     expect(unknown[0]).toContain('Команда не найдена')
     expect(unknown[1]).toContain('open orbit-game')
+  })
+
+  it('play для бота открывает его в Telegram', () => {
+    expect(runCommand('play бот', ctx).effect).toEqual({ type: 'link', url: 'https://t.me/demo_bot' })
+    expect(complete('play s', ctx).value).toBe('play schedule-bot')
   })
 
   it('download, синонимы и пасхалки', () => {

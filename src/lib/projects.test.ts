@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { githubRepo, isGame, latestInstaller, localizeProject, mergeProjects, parseManifest, parseReleases, slugify, type PortfolioProject } from './projects'
+import { githubRepo, isGame, latestInstaller, telegramUrl, localizeProject, mergeProjects, parseManifest, parseReleases, slugify, type PortfolioProject } from './projects'
 
 const source = { repo: 'hatiksu/demo', branch: 'main', isPrivate: false, updatedAt: '2026-11-01T10:00:00Z' }
 
@@ -116,6 +116,25 @@ describe('адрес страницы и репозиторий', () => {
     expect(githubRepo('https://github.com/a/b/tree/main')).toBe('a/b')
     expect(githubRepo('https://gitlab.com/a/b')).toBeUndefined()
     expect(slugify('  Привет World 2 ')).toBe('world-2')
+  })
+})
+
+describe('боты: Telegram и свои скриншоты', () => {
+  it('ссылка на бота из @ника или t.me', () => {
+    expect(telegramUrl('@vgek_schedule_bot')).toBe('https://t.me/vgek_schedule_bot')
+    expect(telegramUrl('https://t.me/vgek_schedule_bot')).toBe('https://t.me/vgek_schedule_bot')
+    expect(telegramUrl('javascript:alert(1)')).toBeUndefined()
+    expect(parseManifest({ title: 'A', description: 'B', telegram: '@my_bot1' }, source)!.telegram).toBe('https://t.me/my_bot1')
+  })
+
+  it('скриншоты — только безопасные пути к картинкам в репозитории', () => {
+    const p = parseManifest(
+      { title: 'A', description: 'B', screenshots: { desktop: './docs/screenshots/showcase.png', mobile: '../secret.png' } },
+      source,
+    )!
+    expect(p.screenshots).toEqual({ desktop: 'docs/screenshots/showcase.png' })
+    expect(parseManifest({ title: 'A', description: 'B', screenshots: { desktop: '/etc/passwd' } }, source)!.screenshots).toBeUndefined()
+    expect(parseManifest({ title: 'A', description: 'B', screenshots: { mobile: 'a/b.txt' } }, source)!.screenshots).toBeUndefined()
   })
 })
 

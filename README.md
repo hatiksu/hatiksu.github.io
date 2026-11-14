@@ -82,12 +82,16 @@ src/
   "icon": "🤖",
   "order": 1,
   "shot": { "click": "Текст кнопки, которую нажать перед скриншотом" },
+  "telegram": "@имя_бота",
+  "screenshots": { "desktop": "docs/screenshots/showcase.png", "mobile": "docs/screenshots/day.png" },
   "en": { "title": "Name", "description": "What it is", "highlights": ["Main feature"] }
 }
 ```
 
 `npm run sync` обходит основные ветки публичных репозиториев владельца (и ветки этого репозитория),
 находит такие файлы, подтягивает релизы и статистику. `npm run apps` собирает каждый проект в сайт и снимает скриншоты.
+Проекты без веб-версии (Telegram-боты) не собираются: картинки берутся из `screenshots` в их репозитории,
+а `telegram` добавляет кнопку «Открыть в Telegram».
 
 ## Деплой
 

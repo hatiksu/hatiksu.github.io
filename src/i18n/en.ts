@@ -68,6 +68,7 @@ export const en: Dict = {
     code: 'Code on GitHub',
     download: 'Download for Windows',
     downloads: 'downloads',
+    telegram: 'Open in Telegram',
   },
   project: {
     back: 'All projects',

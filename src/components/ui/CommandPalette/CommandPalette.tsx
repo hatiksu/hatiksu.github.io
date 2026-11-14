@@ -1,6 +1,6 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
-import { site } from '../../../data/site'
+import { isEmbedded, site } from '../../../data/site'
 import { useLockBodyScroll } from '../../../hooks/useLockBodyScroll'
 import { usePreferences } from '../../../hooks/usePreferences'
 import { latestInstaller, localizeProject } from '../../../lib/projects'
@@ -70,7 +70,19 @@ function Palette({ onClose, onPlay, onTerminal }: Omit<CommandPaletteProps, 'ope
           icon: 'next' as IconName,
           run: go(projectHref(p.slug).slice(1)),
         },
-        ...(site.apps[p.slug]
+        ...(p.telegram
+          ? [
+              {
+                id: `tg-${p.slug}`,
+                group: t.palette.actions,
+                label: `${t.projects.telegram}: ${p.title}`,
+                keywords: `${keywords} telegram бот bot`,
+                icon: 'send' as IconName,
+                run: () => window.open(p.telegram, '_blank', 'noopener'),
+              },
+            ]
+          : []),
+        ...(isEmbedded(p.slug)
           ? [
               {
                 id: `play-${p.slug}`,

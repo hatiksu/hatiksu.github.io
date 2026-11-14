@@ -10,6 +10,8 @@ export interface TermProject {
   tags: string[]
   playable: boolean
   download?: { url: string; tag: string }
+  /** Telegram-бот: play открывает его в Telegram */
+  telegram?: string
 }
 
 export interface TermContext {
@@ -124,7 +126,7 @@ const COMMANDS: Command[] = [
     run: (_a, ctx) => ({
       lines: [
         ...ctx.projects.map((p) =>
-          line(`  ${p.slug.padEnd(18)}${p.title}${p.playable ? '  ▶' : ''}${p.download ? `  ⬇ ${p.download.tag}` : ''}`),
+          line(`  ${p.slug.padEnd(18)}${p.title}${p.playable || p.telegram ? '  ▶' : ''}${p.download ? `  ⬇ ${p.download.tag}` : ''}`),
         ),
         line(
           L(ctx, '▶ — можно запустить (play), ⬇ — есть установщик (download)', '▶ — playable (play), ⬇ — installer (download)'),
@@ -157,6 +159,8 @@ const COMMANDS: Command[] = [
     run: (args, ctx) => {
       const p = needProject('play', args, ctx)
       if (!('slug' in p)) return p
+      if (!p.playable && p.telegram)
+        return { lines: [line(L(ctx, `Открываю ${p.title} в Telegram…`, `Opening ${p.title} in Telegram…`), 'ok')], effect: { type: 'link', url: p.telegram } }
       if (!p.playable) return { lines: [line(L(ctx, `${p.title} нельзя запустить на сайте`, `${p.title} can't run on the site`), 'error')] }
       return { lines: [line(L(ctx, `Запускаю ${p.title}…`, `Launching ${p.title}…`), 'ok')], effect: { type: 'play', slug: p.slug } }
     },
@@ -322,7 +326,7 @@ export function complete(input: string, ctx: TermContext): { value: string; opti
   const q = norm(parts.slice(1).join(' '))
   const pool =
     cmd.name === 'play'
-      ? ctx.projects.filter((p) => p.playable)
+      ? ctx.projects.filter((p) => p.playable || p.telegram)
       : cmd.name === 'download'
         ? ctx.projects.filter((p) => p.download)
         : ctx.projects

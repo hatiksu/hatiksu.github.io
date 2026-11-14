@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { site } from '../../../data/site'
+import { isEmbedded } from '../../../data/site'
 import { usePreferences } from '../../../hooks/usePreferences'
 import { formatDate } from '../../../lib/format'
 import { isGame, localizeProject } from '../../../lib/projects'
@@ -24,7 +24,7 @@ export function Projects({ projects }: { projects: Project[] }) {
         <div className={styles.list}>
           {projects.map((raw, i) => {
             const project = localizeProject(raw, lang)
-            const embedded = Boolean(site.apps[project.slug])
+            const embedded = isEmbedded(project.slug)
             return (
               <Reveal as="article" key={project.id} className={`${styles.project} shot-hover`}>
                 <a href={projectHref(project.slug)} className={styles.shot} tabIndex={-1} aria-hidden="true">
@@ -57,6 +57,11 @@ export function Projects({ projects }: { projects: Project[] }) {
                     {embedded && (
                       <Button icon="play" onClick={() => setPlaying(project)}>
                         {isGame(raw) ? t.projects.play : t.projects.tryIt}
+                      </Button>
+                    )}
+                    {project.telegram && (
+                      <Button href={project.telegram} icon="send" external>
+                        {t.projects.telegram}
                       </Button>
                     )}
                     <DownloadButton project={project} />

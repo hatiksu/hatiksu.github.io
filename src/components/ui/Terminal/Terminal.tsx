@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
-import { site } from '../../../data/site'
+import { isEmbedded, site } from '../../../data/site'
 import { useLockBodyScroll } from '../../../hooks/useLockBodyScroll'
 import { usePreferences } from '../../../hooks/usePreferences'
 import { latestInstaller, localizeProject } from '../../../lib/projects'
@@ -64,7 +64,8 @@ function Console({ onClose, onPlay }: Omit<TerminalProps, 'open'>) {
           title: p.title,
           aliases: [raw.title, raw.en?.title ?? ''].filter(Boolean),
           tags: p.tags,
-          playable: Boolean(site.apps[p.slug]),
+          playable: isEmbedded(p.slug),
+          ...(raw.telegram ? { telegram: raw.telegram } : {}),
           ...(installer ? { download: { url: installer.url, tag: installer.tag } } : {}),
         }
       }),

@@ -68,6 +68,7 @@ export const ru = {
     code: 'Код на GitHub',
     download: 'Скачать для Windows',
     downloads: 'скачиваний',
+    telegram: 'Открыть в Telegram',
   },
   project: {
     back: 'Все проекты',

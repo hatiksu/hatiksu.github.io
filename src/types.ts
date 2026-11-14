@@ -15,7 +15,7 @@ export interface Contacts {
 
 /** Встроенные приложения и их скриншоты (scripts/build-apps.ts) */
 export interface AppsData {
-  apps: Record<string, { commit: string; shots: { desktop: string; mobile: string } | null }>
+  apps: Record<string, { commit: string; shots: { desktop: string; mobile: string } | null; embedded?: boolean }>
 }
 
 export interface NavLink {

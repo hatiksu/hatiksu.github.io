@@ -56,3 +56,6 @@ export const site = {
 }
 
 export type SectionId = (typeof site.sections)[number]
+
+/** Приложение собрано внутрь сайта и его можно запустить («Играть тут»); у ботов есть только скриншоты */
+export const isEmbedded = (slug: string): boolean => Boolean(site.apps[slug]) && site.apps[slug].embedded !== false

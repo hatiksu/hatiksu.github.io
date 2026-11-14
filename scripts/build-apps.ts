@@ -9,6 +9,9 @@
 //   4. записывает список в src/data/apps.generated.json.
 // Если коммит не изменился и всё на месте, проект пропускается.
 //
+// Проекты без веб-версии (например, Telegram-боты) не собираются: если в portfolio.json есть "screenshots",
+// готовые картинки берутся прямо из репозитория проекта и показываются на сайте вместо автоскриншотов.
+//
 // Запуск: npm run apps  (--force — пересобрать всё, --no-shots — без скриншотов)
 import { execFileSync } from 'node:child_process'
 import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
@@ -27,7 +30,7 @@ const FORCE = process.argv.includes('--force')
 const SHOOT = !process.argv.includes('--no-shots')
 
 export interface AppsData {
-  apps: Record<string, { commit: string; shots: { desktop: string; mobile: string } | null }>
+  apps: Record<string, { commit: string; shots: { desktop: string; mobile: string } | null; embedded?: boolean }>
 }
 
 const run = (cmd: string, args: string[], cwd: string, env: Record<string, string> = {}) =>
@@ -132,6 +135,32 @@ async function shoot(projects: PortfolioProject[]) {
   }
 }
 
+/** Готовые скриншоты из репозитория проекта → public/shots/<slug>-desktop.jpg и -mobile.jpg (JPEG через canvas) */
+async function importShots(jobs: { from: string; to: string }[]) {
+  if (!jobs.length) return
+  const { chromium } = await import('@playwright/test')
+  const browser = await chromium.launch()
+  const page = await browser.newPage()
+  mkdirSync(SHOTS, { recursive: true })
+  for (const j of jobs) {
+    const type = extname(j.from).toLowerCase() === '.png' ? 'png' : extname(j.from).toLowerCase() === '.webp' ? 'webp' : 'jpeg'
+    const src = `data:image/${type};base64,${readFileSync(j.from).toString('base64')}`
+    const data = await page.evaluate(async (src) => {
+      const img = new Image()
+      img.src = src
+      await img.decode()
+      const canvas = document.createElement('canvas')
+      canvas.width = img.width
+      canvas.height = img.height
+      canvas.getContext('2d')!.drawImage(img, 0, 0)
+      return canvas.toDataURL('image/jpeg', 0.86).split(',')[1]
+    }, src)
+    writeFileSync(j.to, Buffer.from(data, 'base64'))
+    console.log(`  🖼  ${j.to.split('/public/')[1]} ← репозиторий проекта`)
+  }
+  await browser.close()
+}
+
 /** Уменьшенные WebP-копии скриншотов для сайта (кодирует сам Chromium через canvas) */
 async function makeWebp() {
   const { chromium } = await import('@playwright/test')
@@ -171,6 +200,7 @@ async function main() {
   const prev = readJson<AppsData>(OUT, { apps: {} })
   const next: AppsData = { apps: {} }
   const toShoot: PortfolioProject[] = []
+  const toImport: { from: string; to: string }[] = []
   mkdirSync(CACHE, { recursive: true })
 
   for (const p of projects) {
@@ -180,6 +210,26 @@ async function main() {
     try {
       console.log(`[apps] ${p.repo}`)
       const commit = checkout(p.repo, dir)
+      const own = p.screenshots
+      if (own) {
+        // Свои скриншоты проекта (бот и т.п.): копируем при каждом изменении коммита
+        const shots = { desktop: `shots/${p.slug}-desktop.jpg`, mobile: `shots/${p.slug}-mobile.jpg` }
+        const desktopSrc = own.desktop ?? own.mobile
+        const mobileSrc = own.mobile ?? own.desktop
+        for (const [src, rel] of [[desktopSrc, shots.desktop], [mobileSrc, shots.mobile]] as const) {
+          const from = join(dir, normalize(src!))
+          if (!from.startsWith(dir) || !existsSync(from)) throw new Error(`нет файла ${src} в репозитории`)
+          if (FORCE || prev.apps[p.slug]?.commit !== commit || !existsSync(join(PUBLIC, rel))) toImport.push({ from, to: join(PUBLIC, rel) })
+        }
+        if (!existsSync(join(dir, 'package.json'))) {
+          next.apps[p.slug] = { commit, shots, embedded: false }
+          console.log('  ✓ скриншоты из репозитория, веб-версии нет')
+          continue
+        }
+      } else if (!existsSync(join(dir, 'package.json'))) {
+        console.log('  · нет веб-версии и скриншотов — пропускаю')
+        continue
+      }
       const shotsExist = existsSync(join(SHOTS, `${p.slug}-desktop.jpg`)) && existsSync(join(SHOTS, `${p.slug}-mobile.jpg`))
       const fresh = !FORCE && prev.apps[p.slug]?.commit === commit && existsSync(join(target, 'index.html'))
       if (!fresh) {
@@ -190,7 +240,7 @@ async function main() {
       } else {
         console.log('  ✓ без изменений')
       }
-      if (SHOOT && (!fresh || !shotsExist)) toShoot.push(p)
+      if (SHOOT && !own && (!fresh || !shotsExist)) toShoot.push(p)
       next.apps[p.slug] = {
         commit,
         shots: SHOOT || shotsExist ? { desktop: `shots/${p.slug}-desktop.jpg`, mobile: `shots/${p.slug}-mobile.jpg` } : null,
@@ -202,6 +252,7 @@ async function main() {
   }
 
   if (toShoot.length) await shoot(toShoot)
+  await importShots(toImport)
   writeFileSync(OUT, JSON.stringify(next, null, 2) + '\n')
   await makeWebp()
   console.log(`[apps] встроено приложений: ${Object.keys(next.apps).length}`)

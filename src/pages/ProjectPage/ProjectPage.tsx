@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'motion/react'
-import { site } from '../../data/site'
+import { isEmbedded, site } from '../../data/site'
 import { usePreferences } from '../../hooks/usePreferences'
 import { formatDate, formatMegabytes, formatNumber } from '../../lib/format'
 import { isGame as checkGame, latestInstaller, localizeProject } from '../../lib/projects'
@@ -32,7 +32,7 @@ export function ProjectPage({ slug }: { slug: string }) {
 
   const project = localizeProject(site.projects[index], lang)
   const next = localizeProject(site.projects[(index + 1) % site.projects.length], lang)
-  const embedded = Boolean(site.apps[slug])
+  const embedded = isEmbedded(slug)
   const installer = latestInstaller(project)
   const isGame = checkGame(site.projects[index])
   const shareUrl = `${site.url}p/${slug}/`
@@ -73,7 +73,12 @@ export function ProjectPage({ slug }: { slug: string }) {
                 {isGame ? t.projects.play : t.projects.tryIt}
               </Button>
             )}
-            <DownloadButton project={project} variant={embedded ? 'ghost' : 'primary'} />
+            {project.telegram && (
+              <Button href={project.telegram} variant={embedded ? 'ghost' : 'primary'} icon="send" external>
+                {t.projects.telegram}
+              </Button>
+            )}
+            <DownloadButton project={project} variant={embedded || project.telegram ? 'ghost' : 'primary'} />
             {project.code && (
               <Button href={project.code} icon="github" external>
                 {t.projects.code}

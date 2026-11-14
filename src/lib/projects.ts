@@ -48,6 +48,10 @@ export interface PortfolioProject {
   en?: ProjectTranslation
   /** Подготовка к автоскриншоту: нажать кнопку с этим текстом (поле "shot" в portfolio.json) */
   shot?: { click: string }
+  /** Готовые скриншоты в репозитории проекта (пути от корня) — для проектов без веб-версии, например ботов */
+  screenshots?: { desktop?: string; mobile?: string }
+  /** Ссылка на Telegram-бота: кнопка «Открыть в Telegram» */
+  telegram?: string
   /** Релизы, новые сверху */
   releases?: Release[]
   /** Дата последнего коммита в ветке проекта (ISO) */
@@ -102,6 +106,27 @@ function parseTranslation(raw: unknown): ProjectTranslation | undefined {
   return { title, text, points: strList(m.highlights, MAX_POINTS, 200) }
 }
 
+/** Путь к картинке внутри репозитория: без «..», абсолютных путей и схем */
+function repoImagePath(v: unknown): string | undefined {
+  const s = str(v, 200).replace(/^\.\//, '')
+  return /^[\w-]+(?:\/[\w.-]+)*\.(?:png|jpe?g|webp)$/i.test(s) && !s.split('/').includes('..') ? s : undefined
+}
+
+function parseScreenshots(raw: unknown): PortfolioProject['screenshots'] {
+  if (!raw || typeof raw !== 'object') return undefined
+  const r = raw as Record<string, unknown>
+  const desktop = repoImagePath(r.desktop)
+  const mobile = repoImagePath(r.mobile)
+  return desktop || mobile ? { ...(desktop ? { desktop } : {}), ...(mobile ? { mobile } : {}) } : undefined
+}
+
+/** https://t.me/<бот> или @бот → https://t.me/<бот> */
+export function telegramUrl(v: unknown): string | undefined {
+  const s = str(v, 100)
+  const m = s.match(/^(?:@|https:\/\/t\.me\/)([a-z0-9_]{5,32})$/i)
+  return m ? `https://t.me/${m[1]}` : undefined
+}
+
 /**
  * Проверяет и нормализует содержимое portfolio.json.
  * Возвращает null, если обязательных полей (title, description) нет.
@@ -129,6 +154,8 @@ export function parseManifest(raw: unknown, source: ManifestSource): PortfolioPr
     'project'
   const en = parseTranslation(m.en)
   const shotClick = m.shot && typeof m.shot === 'object' ? str((m.shot as Record<string, unknown>).click, 80) : ''
+  const screenshots = parseScreenshots(m.screenshots)
+  const telegram = telegramUrl(m.telegram)
 
   return {
     id: `${source.repo}@${source.branch}`,
@@ -144,6 +171,8 @@ export function parseManifest(raw: unknown, source: ManifestSource): PortfolioPr
     ...(repo ? { repo } : {}),
     ...(en ? { en } : {}),
     ...(shotClick ? { shot: { click: shotClick } } : {}),
+    ...(screenshots ? { screenshots } : {}),
+    ...(telegram ? { telegram } : {}),
     updatedAt: source.updatedAt,
     ...(order !== undefined ? { order } : {}),
   }
