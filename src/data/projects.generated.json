@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-09T11:54:28.590Z",
+  "generatedAt": "2026-11-14T21:34:06.043Z",
   "projects": [
     {
       "id": "hatiksu/finance-tracker@main",
@@ -93,7 +93,7 @@
             "name": "orbit-game-Setup-1.0.0.exe",
             "url": "https://github.com/hatiksu/orbit-game/releases/download/v1.0.0/orbit-game-Setup-1.0.0.exe",
             "size": 121001953,
-            "downloads": 2
+            "downloads": 3
           }
         }
       ]
@@ -195,6 +195,45 @@
           }
         }
       ]
+    },
+    {
+      "id": "hatiksu/schedule-bot@main",
+      "slug": "schedule-bot",
+      "title": "Бот расписания колледжа",
+      "text": "Telegram-бот с расписанием ВГЭК: сам забирает его с сайта, присылает замены и напоминания, рисует расписание картинкой и показывает пары виджетом на экране телефона. Premium за Telegram Stars.",
+      "tags": [
+        "Python",
+        "aiogram 3",
+        "SQLite",
+        "Pillow",
+        "Telegram Stars",
+        "Парсинг"
+      ],
+      "points": [
+        "Парсер сайта колледжа и уведомления о заменах: бот каждые 30 минут сам проверяет расписание и пишет, что поменялось",
+        "Расписание картинкой в 8 темах и виджет на рабочий стол телефона — всё рисуется на Pillow",
+        "Монетизация через Telegram Stars: Premium, промокоды, подарки, рефералы; админка с графиками и автобэкапами"
+      ],
+      "mockup": "generic",
+      "icon": "📅",
+      "code": "https://github.com/hatiksu/schedule-bot",
+      "repo": "hatiksu/schedule-bot",
+      "en": {
+        "title": "College schedule bot",
+        "text": "A Telegram bot for the college timetable: it scrapes the schedule from the college website, sends change alerts and reminders, renders the schedule as images and shows classes in a home-screen widget. Premium via Telegram Stars.",
+        "points": [
+          "Website scraper with change alerts: every 30 minutes the bot checks the timetable and reports what changed",
+          "Schedule images in 8 themes and a phone home-screen widget — all rendered with Pillow",
+          "Monetisation with Telegram Stars: Premium, promo codes, gifts, referrals; admin panel with charts and auto-backups"
+        ]
+      },
+      "screenshots": {
+        "desktop": "docs/screenshots/showcase.png",
+        "mobile": "docs/screenshots/day-classic.png"
+      },
+      "telegram": "https://t.me/VGEKScheduleBot",
+      "updatedAt": "2026-11-14T21:33:43Z",
+      "order": 3
     }
   ]
 }

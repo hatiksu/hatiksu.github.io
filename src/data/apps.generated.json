@@ -27,6 +27,14 @@
         "desktop": "shots/prism-puzzle-desktop.jpg",
         "mobile": "shots/prism-puzzle-mobile.jpg"
       }
+    },
+    "schedule-bot": {
+      "commit": "1b2facb2b41a7b8b62e393f79d1d1a974a36eda2",
+      "shots": {
+        "desktop": "shots/schedule-bot-desktop.jpg",
+        "mobile": "shots/schedule-bot-mobile.jpg"
+      },
+      "embedded": false
     }
   }
 }
