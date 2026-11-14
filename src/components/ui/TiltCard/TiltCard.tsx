@@ -5,11 +5,9 @@ import styles from './TiltCard.module.css'
 interface TiltCardProps {
   children: ReactNode
   className?: string
-  /** Максимальный наклон в градусах */
   max?: number
 }
 
-/** Карточка с 3D-наклоном и подсветкой за курсором. */
 export function TiltCard({ children, className = '', max = 8 }: TiltCardProps) {
   const ref = useRef<HTMLDivElement>(null)
   const reduce = useReducedMotion()

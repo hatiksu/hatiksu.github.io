@@ -1,5 +1,3 @@
-// Тексты сайта на русском. Английская версия — en.ts, ключи совпадают (тип Dict).
-
 export const ru = {
   meta: {
     title: 'Hatiksu — разработчик',
@@ -175,7 +173,6 @@ export const ru = {
   },
 }
 
-/** Русское склонение: 1 коммит, 2 коммита, 5 коммитов */
 export function plural(n: number, one: string, few: string, many: string): string {
   const m10 = n % 10
   const m100 = n % 100

@@ -1,6 +1,3 @@
-// Маршруты на hash: сайт статический (GitHub Pages), поэтому адреса вида #/project/<slug>.
-// Обычные якоря (#projects) остаются якорями главной страницы.
-
 export type Route = { page: 'home'; section?: string } | { page: 'project'; slug: string } | { page: 'notfound' }
 
 export function parseRoute(hash: string): Route {

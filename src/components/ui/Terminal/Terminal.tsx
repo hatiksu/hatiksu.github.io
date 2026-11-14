@@ -19,7 +19,6 @@ const BANNER = String.raw` _           _   _ _
 | | | | (_| | |_| |   <\__ \ |_| |
 |_| |_|\__,_|\__|_|_|\_\___/\__,_|`
 
-/** Терминал-пасхалка: открывается клавишей ` (ё), команды help, projects, play, open, contact… */
 export function Terminal({ open, onClose, onPlay }: TerminalProps) {
   useLockBodyScroll(open)
   return <AnimatePresence>{open && <Console onClose={onClose} onPlay={onPlay} />}</AnimatePresence>
@@ -78,7 +77,6 @@ function Console({ onClose, onPlay }: Omit<TerminalProps, 'open'>) {
     return () => cancelAnimationFrame(id)
   }, [])
 
-  // Новые строки — всегда внизу
   useEffect(() => {
     bodyRef.current?.scrollTo({ top: bodyRef.current.scrollHeight })
   }, [entries])
@@ -98,7 +96,6 @@ function Console({ onClose, onPlay }: Omit<TerminalProps, 'open'>) {
     push({ input, lines: result.lines })
     const effect = result.effect
     if (!effect) return
-    // Действия — после того как ответ отрисуется
     window.setTimeout(() => {
       switch (effect.type) {
         case 'navigate':

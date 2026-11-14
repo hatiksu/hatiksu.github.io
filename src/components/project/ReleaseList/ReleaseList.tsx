@@ -47,7 +47,6 @@ function Notes({ md }: { md: string }) {
   )
 }
 
-/** Лента релизов: версия, дата, установщик и описание */
 export function ReleaseList({ releases }: { releases: Release[] }) {
   const { t, lang } = usePreferences()
   return (

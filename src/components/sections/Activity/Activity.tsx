@@ -8,7 +8,6 @@ import { Reveal } from '../../ui/Reveal/Reveal'
 import { SectionHeading } from '../../ui/SectionHeading/SectionHeading'
 import styles from './Activity.module.css'
 
-/** Цвета языков как на GitHub */
 const LANG_COLORS: Record<string, string> = {
   TypeScript: '#3178c6',
   JavaScript: '#f1e05a',
@@ -36,7 +35,6 @@ export function Activity({ stats, github }: { stats: GithubStats; github: string
     { value: stats.totals.releases, label: t.activity.releases },
   ]
 
-  // Подписи месяцев над первой неделей каждого месяца
   const months = weeks.map((_, w) => {
     const d = new Date(start + w * 7 * DAY)
     const prev = new Date(start + (w - 1) * 7 * DAY)

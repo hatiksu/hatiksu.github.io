@@ -1,6 +1,3 @@
-// Мини-игра для страницы 404: арканоид, где кирпичи выложены цифрами «404».
-// Детерминированная логика без DOM: шаг симуляции step() и раскладка кирпичей — покрыты тестами.
-
 export const W = 360
 export const H = 480
 export const BALL_R = 6
@@ -10,7 +7,6 @@ export const PADDLE_Y = H - 36
 const SPEED = 300
 const MAX_SPEED = 470
 
-/** Пиксельный шрифт 3×5 для цифр */
 const GLYPHS: Record<string, string[]> = {
   '4': ['1.1', '1.1', '111', '..1', '..1'],
   '0': ['111', '1.1', '1.1', '1.1', '111'],
@@ -22,7 +18,6 @@ export interface Brick {
   w: number
   h: number
   alive: boolean
-  /** Номер цифры — для цвета */
   glyph: number
 }
 
@@ -44,7 +39,6 @@ export interface GameState {
   status: Status
 }
 
-/** Кирпичи по пиксельному шрифту: каждая «точка» цифры — кирпич */
 export function layoutBricks(text = '404', top = 70): Brick[] {
   const cell = 22
   const gap = 3
@@ -79,7 +73,6 @@ export function newGame(): GameState {
 
 const restingBall = (paddleX: number): Ball => ({ x: paddleX, y: PADDLE_Y - BALL_R - 1, vx: 0, vy: 0 })
 
-/** Запуск мяча: немного в сторону, чтобы не летел строго вертикально */
 export function launch(s: GameState, dir = 1): GameState {
   if (s.status === 'playing') return s
   const base = s.status === 'won' || s.status === 'lost' ? newGame() : s
@@ -94,7 +87,6 @@ export function movePaddle(s: GameState, x: number): GameState {
   return s.status === 'playing' ? { ...s, paddleX } : { ...s, paddleX, ball: restingBall(paddleX) }
 }
 
-/** Шаг симуляции; dt в секундах (длинные шаги дробятся, чтобы мяч не проскакивал кирпичи) */
 export function step(s: GameState, dt: number): GameState {
   if (s.status !== 'playing') return s
   let state = s
@@ -109,7 +101,6 @@ function substep(s: GameState, dt: number): GameState {
   x += vx * dt
   y += vy * dt
 
-  // Стены
   if (x < BALL_R) {
     x = BALL_R
     vx = Math.abs(vx)
@@ -122,18 +113,16 @@ function substep(s: GameState, dt: number): GameState {
     vy = Math.abs(vy)
   }
 
-  // Ракетка: угол отскока зависит от точки удара
   const half = PADDLE_W / 2
   if (vy > 0 && y + BALL_R >= PADDLE_Y && y + BALL_R <= PADDLE_Y + PADDLE_H + 8 && Math.abs(x - s.paddleX) <= half + BALL_R) {
     const hit = clamp((x - s.paddleX) / half, -1, 1)
     const speed = Math.min(MAX_SPEED, Math.hypot(vx, vy) * 1.02)
-    const angle = hit * 1.05 // до ~60° от вертикали
+    const angle = hit * 1.05
     vx = Math.sin(angle) * speed
     vy = -Math.cos(angle) * speed
     y = PADDLE_Y - BALL_R
   }
 
-  // Кирпичи: отражаемся по оси с меньшим перекрытием
   let bricks = s.bricks
   for (let i = 0; i < bricks.length; i++) {
     const b = bricks[i]
@@ -151,7 +140,6 @@ function substep(s: GameState, dt: number): GameState {
   }
   if (bricks.every((b) => !b.alive)) status = 'won'
 
-  // Мяч упал
   if (y - BALL_R > H) {
     lives -= 1
     if (lives <= 0) return { ...s, bricks, score, lives: 0, status: 'lost', ball: restingBall(s.paddleX) }

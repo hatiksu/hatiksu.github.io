@@ -24,7 +24,6 @@
   color-scheme: dark;
 }
 
-/* Светлая тема: переопределяем только переменные */
 :root[data-theme='light'] {
   --bg: #f6f6fb;
   --bg-elevated: #ffffff;
@@ -45,7 +44,6 @@
   color-scheme: light;
 }
 
-/* Плавная смена темы (View Transitions) */
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation-duration: 0.45s;

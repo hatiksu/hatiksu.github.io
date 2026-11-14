@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest'
 import { buildHeatmap, heatLevel, heatmapWeeks, longestStreak, mergeLanguages } from './github'
 
 describe('buildHeatmap', () => {
-  // Среда, 11 ноября 2026
   const today = new Date('2026-11-11T15:00:00Z')
 
   it('начинается с понедельника и заканчивается сегодня', () => {

@@ -19,7 +19,6 @@ function draw(ctx: CanvasRenderingContext2D, s: GameState, time: number) {
     ctx.fill()
   }
   ctx.shadowBlur = 0
-  // Ракетка
   const grad = ctx.createLinearGradient(s.paddleX - PADDLE_W / 2, 0, s.paddleX + PADDLE_W / 2, 0)
   grad.addColorStop(0, '#7c5cff')
   grad.addColorStop(1, '#22d3ee')
@@ -27,7 +26,6 @@ function draw(ctx: CanvasRenderingContext2D, s: GameState, time: number) {
   ctx.beginPath()
   ctx.roundRect(s.paddleX - PADDLE_W / 2, PADDLE_Y, PADDLE_W, PADDLE_H, 5)
   ctx.fill()
-  // Мяч с пульсирующим свечением
   ctx.shadowColor = '#ffffff'
   ctx.shadowBlur = 14 + Math.sin(time / 200) * 4
   ctx.fillStyle = '#ffffff'
@@ -37,7 +35,6 @@ function draw(ctx: CanvasRenderingContext2D, s: GameState, time: number) {
   ctx.shadowBlur = 0
 }
 
-/** Арканоид с кирпичами «404»: мышь, касание или стрелки; пробел/тап — запуск */
 export function BreakoutGame() {
   const { t } = usePreferences()
   const canvasRef = useRef<HTMLCanvasElement>(null)

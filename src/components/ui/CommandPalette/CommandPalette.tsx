@@ -22,12 +22,10 @@ interface Command {
 interface CommandPaletteProps {
   open: boolean
   onClose: () => void
-  /** Открыть встроенное приложение проекта */
   onPlay: (slug: string) => void
   onTerminal: () => void
 }
 
-/** Командная палитра (Ctrl+K / ⌘K): разделы, проекты и действия с поиском и управлением с клавиатуры */
 export function CommandPalette({ open, onClose, onPlay, onTerminal }: CommandPaletteProps) {
   useLockBodyScroll(open)
   return <AnimatePresence>{open && <Palette onClose={onClose} onPlay={onPlay} onTerminal={onTerminal} />}</AnimatePresence>
@@ -187,7 +185,6 @@ function Palette({ onClose, onPlay, onTerminal }: Omit<CommandPaletteProps, 'ope
     return () => cancelAnimationFrame(id)
   }, [])
 
-  // Прокручиваем список к выбранному пункту
   useEffect(() => {
     listRef.current?.querySelector(`[data-index="${active}"]`)?.scrollIntoView({ block: 'nearest' })
   }, [active])
@@ -195,7 +192,6 @@ function Palette({ onClose, onPlay, onTerminal }: Omit<CommandPaletteProps, 'ope
   const runCommand = (c: Command | undefined) => {
     if (!c) return
     onClose()
-    // Действие — после закрытия, чтобы фокус и прокрутка вернулись к странице
     requestAnimationFrame(() => c.run())
   }
 

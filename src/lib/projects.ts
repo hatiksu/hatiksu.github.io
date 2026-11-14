@@ -1,10 +1,6 @@
-// Разбор карточек проектов из файлов portfolio.json и релизов GitHub. Чистые функции без сети —
-// их использует скрипт синхронизации (scripts/sync-projects.ts) и покрывают тесты.
-
 export type Mockup = 'finance' | 'editor' | 'generic'
 export type Lang = 'ru' | 'en'
 
-/** Тексты карточки на втором языке (поле "en" в portfolio.json) */
 export interface ProjectTranslation {
   title: string
   text: string
@@ -14,7 +10,6 @@ export interface ProjectTranslation {
 export interface ReleaseAsset {
   name: string
   url: string
-  /** Размер в байтах */
   size: number
   downloads: number
 }
@@ -23,38 +18,27 @@ export interface Release {
   tag: string
   name: string
   publishedAt: string
-  /** Описание релиза (Markdown), обрезанное */
   notes: string
-  /** Установщик для Windows, если он есть */
   installer?: ReleaseAsset
 }
 
 export interface PortfolioProject {
-  /** Уникальный ключ: репозиторий@ветка */
   id: string
-  /** Адрес страницы проекта: #/project/<slug> */
   slug: string
   title: string
   text: string
   tags: string[]
   points: string[]
   mockup: Mockup
-  /** Эмодзи для универсального макета */
   icon: string
   demo?: string
   code?: string
-  /** Репозиторий с кодом и релизами на GitHub (owner/name), если code ведёт на GitHub */
   repo?: string
   en?: ProjectTranslation
-  /** Подготовка к автоскриншоту: нажать кнопку с этим текстом (поле "shot" в portfolio.json) */
   shot?: { click: string }
-  /** Готовые скриншоты в репозитории проекта (пути от корня) — для проектов без веб-версии, например ботов */
   screenshots?: { desktop?: string; mobile?: string }
-  /** Ссылка на Telegram-бота: кнопка «Открыть в Telegram» */
   telegram?: string
-  /** Релизы, новые сверху */
   releases?: Release[]
-  /** Дата последнего коммита в ветке проекта (ISO) */
   updatedAt: string
   order?: number
 }
@@ -62,7 +46,6 @@ export interface PortfolioProject {
 export interface ManifestSource {
   repo: string
   branch: string
-  /** Приватный репозиторий: ссылку на код посетители не откроют, поэтому её не показываем */
   isPrivate: boolean
   updatedAt: string
 }
@@ -82,13 +65,11 @@ const httpsUrl = (v: unknown): string | undefined => {
 }
 const num = (v: unknown): number => (typeof v === 'number' && Number.isFinite(v) && v >= 0 ? v : 0)
 
-/** owner/name из ссылки на репозиторий GitHub (без ветки и путей) или undefined */
 export function githubRepo(url: string | undefined): string | undefined {
   const m = url?.match(/^https:\/\/github\.com\/([\w.-]+)\/([\w.-]+?)(?:\.git)?(?:[/?#]|$)/)
   return m ? `${m[1]}/${m[2]}` : undefined
 }
 
-/** Безопасный для адреса идентификатор: латиница, цифры и дефисы */
 export function slugify(s: string): string {
   return s
     .toLowerCase()
@@ -106,7 +87,6 @@ function parseTranslation(raw: unknown): ProjectTranslation | undefined {
   return { title, text, points: strList(m.highlights, MAX_POINTS, 200) }
 }
 
-/** Путь к картинке внутри репозитория: без «..», абсолютных путей и схем */
 function repoImagePath(v: unknown): string | undefined {
   const s = str(v, 200).replace(/^\.\//, '')
   return /^[\w-]+(?:\/[\w.-]+)*\.(?:png|jpe?g|webp)$/i.test(s) && !s.split('/').includes('..') ? s : undefined
@@ -120,17 +100,12 @@ function parseScreenshots(raw: unknown): PortfolioProject['screenshots'] {
   return desktop || mobile ? { ...(desktop ? { desktop } : {}), ...(mobile ? { mobile } : {}) } : undefined
 }
 
-/** https://t.me/<бот> или @бот → https://t.me/<бот> */
 export function telegramUrl(v: unknown): string | undefined {
   const s = str(v, 100)
   const m = s.match(/^(?:@|https:\/\/t\.me\/)([a-z0-9_]{5,32})$/i)
   return m ? `https://t.me/${m[1]}` : undefined
 }
 
-/**
- * Проверяет и нормализует содержимое portfolio.json.
- * Возвращает null, если обязательных полей (title, description) нет.
- */
 export function parseManifest(raw: unknown, source: ManifestSource): PortfolioProject | null {
   if (!raw || typeof raw !== 'object') return null
   const m = raw as Record<string, unknown>
@@ -141,7 +116,6 @@ export function parseManifest(raw: unknown, source: ManifestSource): PortfolioPr
   const mockup = MOCKUPS.includes(m.mockup as Mockup) ? (m.mockup as Mockup) : 'generic'
   const treeUrl = `https://github.com/${source.repo}/tree/${source.branch}`
   const order = typeof m.order === 'number' && Number.isFinite(m.order) ? m.order : undefined
-  // Явная ссылка из манифеста важнее; иначе — ветка, если репозиторий публичный
   const code = httpsUrl(m.code) ?? (source.isPrivate ? undefined : treeUrl)
   const repo = githubRepo(code)
   const branchName = source.branch.replace(/^(feature|project)\//, '')
@@ -178,7 +152,6 @@ export function parseManifest(raw: unknown, source: ManifestSource): PortfolioPr
   }
 }
 
-/** Релизы из ответа GitHub API: без черновиков, новые сверху, с установщиком .exe, если он есть. */
 export function parseReleases(raw: unknown): Release[] {
   if (!Array.isArray(raw)) return []
   const releases: Release[] = []
@@ -205,10 +178,6 @@ export function parseReleases(raw: unknown): Release[] {
   return releases.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt)).slice(0, MAX_RELEASES)
 }
 
-/**
- * Один проект может лежать в нескольких местах (ветка разработки и отдельный репозиторий) —
- * оставляем самую свежую версию с тем же адресом. Затем сортируем: сначала по order, потом новые сверху.
- */
 export function mergeProjects(projects: PortfolioProject[]): PortfolioProject[] {
   const bySlug = new Map<string, PortfolioProject>()
   for (const p of projects) {
@@ -223,19 +192,16 @@ export function mergeProjects(projects: PortfolioProject[]): PortfolioProject[] 
   })
 }
 
-/** Тексты карточки на нужном языке; если перевода нет — оригинал. */
 export function localizeProject(p: PortfolioProject, lang: Lang): PortfolioProject {
   if (lang === 'ru' || !p.en) return p
   return { ...p, title: p.en.title, text: p.en.text, points: p.en.points.length ? p.en.points : p.points }
 }
 
-/** Последний релиз с установщиком */
 export function latestInstaller(p: PortfolioProject): (ReleaseAsset & { tag: string; publishedAt: string }) | undefined {
   const r = p.releases?.find((x) => x.installer)
   return r?.installer ? { ...r.installer, tag: r.tag, publishedAt: r.publishedAt } : undefined
 }
 
-/** Игра или приложение — от этого зависит подпись кнопки («Играть» / «Попробовать») */
 export function isGame(p: PortfolioProject): boolean {
   const text = `${p.title} ${p.text} ${p.en?.title ?? ''} ${p.tags.join(' ')}`
   return /игр|аркад|головолом|\bgame|arcade|puzzle|canvas/i.test(text)

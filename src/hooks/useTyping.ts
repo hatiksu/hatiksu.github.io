@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useReducedMotion } from 'motion/react'
 
-/** Эффект печатной машинки: печатает и стирает фразы по очереди. */
 export function useTyping(phrases: string[], { typeMs = 70, deleteMs = 35, holdMs = 1600 } = {}) {
   const reduce = useReducedMotion()
   const [text, setText] = useState('')
@@ -33,6 +32,5 @@ export function useTyping(phrases: string[], { typeMs = 70, deleteMs = 35, holdM
     return () => window.clearTimeout(timer)
   }, [phrases, reduce, typeMs, deleteMs, holdMs])
 
-  // При «уменьшить движение» сразу показываем первую фразу без анимации
   return reduce ? (phrases[0] ?? '') : text
 }

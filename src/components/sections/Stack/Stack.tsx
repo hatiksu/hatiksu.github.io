@@ -5,7 +5,6 @@ import { SectionHeading } from '../../ui/SectionHeading/SectionHeading'
 import styles from './Stack.module.css'
 
 function Row({ items, reverse }: { items: Tech[]; reverse?: boolean }) {
-  // Дублируем список, чтобы лента прокручивалась бесшовно
   const loop = [...items, ...items]
   return (
     <div className={styles.marquee}>

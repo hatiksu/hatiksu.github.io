@@ -3,7 +3,6 @@ import { usePreferences } from '../../../hooks/usePreferences'
 import { useScrollState } from '../../../hooks/useScrollState'
 import styles from './BackToTop.module.css'
 
-/** Кнопка «Наверх», появляется после прокрутки. */
 export function BackToTop() {
   const { t } = usePreferences()
   const { y } = useScrollState()

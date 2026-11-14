@@ -1,4 +1,3 @@
-// Шейдер фона: «туманность» из фрактального шума с искажением, подсвечивается у курсора.
 export const VERTEX = `
 attribute vec2 p;
 void main() { gl_Position = vec4(p, 0.0, 1.0); }
@@ -38,24 +37,20 @@ void main() {
 
   vec2 q = vec2(fbm(p * 1.4 + t), fbm(p * 1.4 - t + 3.1));
   vec2 r = vec2(fbm(p * 1.8 + 2.0 * q + vec2(1.7, 9.2) + t * 1.3), fbm(p * 1.8 + 2.0 * q + vec2(8.3, 2.8) - t));
-  // Курсор плавно «раздвигает» туманность (без особой точки в центре)
   r += 0.6 * exp(-md * md * 6.0) * (p - m);
   float f = fbm(p * 1.6 + 2.6 * r);
 
   vec3 col = mix(uA, uB, clamp(q.x * 1.3, 0.0, 1.0));
   col = mix(col, uC, clamp(r.y * r.y * 1.4, 0.0, 1.0));
   float glow = smoothstep(0.25, 0.95, f) * (0.55 + 0.45 * exp(-md * 2.2));
-  // Сверху ярче, к низу экрана — затухание, чтобы не мешать тексту
   float fade = mix(0.35, 1.0, smoothstep(0.0, 1.0, uv.y));
   float strength = mix(0.7, 0.35, uLight);
   vec3 outc = mix(uBg, col, glow * strength * fade);
-  // Лёгкое зерно против полос на градиенте
   outc += (hash(gl_FragCoord.xy + uTime) - 0.5) * 0.012;
   gl_FragColor = vec4(outc, 1.0);
 }
 `
 
-/** #rrggbb → [r, g, b] от 0 до 1 */
 export function hexToRgb(hex: string): [number, number, number] {
   const m = hex.trim().match(/^#?([0-9a-f]{6})$/i)
   if (!m) return [0, 0, 0]

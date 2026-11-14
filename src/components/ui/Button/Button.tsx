@@ -4,19 +4,16 @@ import { Icon, type IconName } from '../Icon/Icon'
 import styles from './Button.module.css'
 
 interface ButtonProps {
-  /** Ссылка; без неё рендерится кнопка */
   href?: string
   children: ReactNode
   variant?: 'primary' | 'ghost'
   icon?: IconName
   external?: boolean
-  /** Подпись мелким шрифтом под текстом (например, версия и размер) */
   note?: string
   onClick?: () => void
   ariaLabel?: string
 }
 
-/** Ссылка-кнопка с «магнитным» эффектом: тянется за курсором. */
 export function Button({ href, children, variant = 'ghost', icon, external, note, onClick, ariaLabel }: ButtonProps) {
   const ref = useRef<HTMLElement>(null)
   const reduce = useReducedMotion()

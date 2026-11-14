@@ -1,16 +1,12 @@
-// Терминал-пасхалка: разбор команд, ответы и автодополнение. Чистые функции — всё, что
-// меняет страницу (переходы, запуск приложения, тема), возвращается как effect и выполняется компонентом.
 import type { Lang } from './projects'
 
 export interface TermProject {
   slug: string
   title: string
-  /** Заголовки на обоих языках — для поиска «orbit» и «орбита» */
   aliases: string[]
   tags: string[]
   playable: boolean
   download?: { url: string; tag: string }
-  /** Telegram-бот: play открывает его в Telegram */
   telegram?: string
 }
 
@@ -46,7 +42,6 @@ export interface TermResult {
 interface Command {
   name: string
   aliases?: string[]
-  /** Аргумент — проект (для автодополнения) */
   takesProject?: boolean
   hidden?: boolean
   help: Record<Lang, string>
@@ -58,7 +53,6 @@ const line = (text: string, tone?: Tone): TermLine => (tone ? { text, tone } : {
 
 const norm = (s: string) => s.toLowerCase().replace(/ё/g, 'е').trim()
 
-/** Проект по началу slug или любому слову названия: «orbit», «орбита», «prism-puzzle» */
 export function findProject(query: string, projects: TermProject[]): TermProject | undefined {
   const q = norm(query)
   if (!q) return undefined
@@ -227,7 +221,6 @@ const COMMANDS: Command[] = [
     help: { ru: 'закрыть терминал', en: 'close the terminal' },
     run: (_a, ctx) => ({ lines: [line(L(ctx, 'Пока!', 'Bye!'), 'muted')], effect: { type: 'exit' } }),
   },
-  // Скрытые команды-пасхалки
   {
     name: 'sudo',
     hidden: true,
@@ -273,7 +266,6 @@ const COMMANDS: Command[] = [
 function resolve(input: string): { cmd?: Command; args: string[] } {
   const text = input.trim()
   const lower = text.toLowerCase()
-  // Многословные синонимы вроде «cat about.txt»
   const multi = COMMANDS.find((c) => c.aliases?.some((a) => a.includes(' ') && lower === a))
   if (multi) return { cmd: multi, args: [] }
   const [head = '', ...args] = text.split(/\s+/)
@@ -287,7 +279,6 @@ export function runCommand(input: string, ctx: TermContext): TermResult {
   const { cmd, args } = resolve(text)
   if (!cmd) {
     const head = text.split(/\s+/)[0]
-    // Если ввели название проекта без команды — подскажем
     const p = findProject(text, ctx.projects)
     return {
       lines: [
@@ -299,7 +290,6 @@ export function runCommand(input: string, ctx: TermContext): TermResult {
   return cmd.run(args, ctx)
 }
 
-/** Общее начало строк */
 function commonPrefix(list: string[]): string {
   if (!list.length) return ''
   let prefix = list[0]
@@ -307,9 +297,6 @@ function commonPrefix(list: string[]): string {
   return prefix
 }
 
-/**
- * Автодополнение по Tab. Возвращает новую строку ввода и варианты, если их несколько.
- */
 export function complete(input: string, ctx: TermContext): { value: string; options: string[] } {
   const parts = input.replace(/^\s+/, '').split(/\s+/)
   if (parts.length <= 1) {

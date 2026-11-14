@@ -3,7 +3,6 @@ import { usePreferences } from '../../../hooks/usePreferences'
 import { Icon } from '../Icon/Icon'
 import styles from './PrefsToggles.module.css'
 
-/** Переключатели языка (RU/EN) и темы */
 export function PrefsToggles({ className = '' }: { className?: string }) {
   const { t, lang, theme, toggleLang, toggleTheme } = usePreferences()
   return (

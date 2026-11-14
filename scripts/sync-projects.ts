@@ -1,23 +1,3 @@
-// Синхронизация проектов: обходит репозитории на GitHub, находит файлы portfolio.json
-// и записывает карточки в src/data/projects.generated.json, а статистику — в src/data/github.generated.json.
-//
-// Где ищем проекты:
-//   • основная ветка каждого публичного репозитория владельца — здесь живут приложения и их релизы;
-//   • все ветки текущего репозитория.
-// На сайт попадают только проекты с portfolio.json — лабораторные и прочее не появятся сами.
-//
-// Для каждого проекта с репозиторием на GitHub подтягиваются релизы (версия, установщик .exe, скачивания).
-// Статистика: карта коммитов за год, языки по объёму кода, звёзды, релизы и скачивания.
-//
-// Как обращаемся к GitHub:
-//   • прямой запрос к API — с GITHUB_TOKEN, если он есть (в GitHub Actions он есть всегда),
-//     иначе без авторизации (лимит 60 запросов в час);
-//   • если токен не подошёл (401) или кончился лимит, а установлен CLI `gh` с выполненным входом — дальше через него.
-//   • если список репозиториев владельца недоступен, берём репозитории из прошлого списка проектов.
-//
-// Если GitHub недоступен, файлы не трогаем: сайт соберётся с прошлыми данными.
-//
-// Запуск: npm run sync
 import { execFileSync } from 'node:child_process'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
@@ -84,7 +64,6 @@ async function api<T>(path: string): Promise<T> {
   return (await res.json()) as T
 }
 
-/** Запрос, который при ошибке возвращает fallback: второстепенные данные не должны ломать синхронизацию */
 async function optional<T>(path: string, fallback: T): Promise<T> {
   try {
     return await api<T>(path)
@@ -128,7 +107,6 @@ function readJson<T>(file: string): T | null {
   }
 }
 
-/** Пишет файл, только если данные (без отметки времени) изменились — чтобы не плодить коммиты */
 function writeIfChanged(file: string, key: string, data: Record<string, unknown>): boolean {
   const prev = readJson<Record<string, unknown>>(file)
   const strip = (o: Record<string, unknown> | null) => (o ? JSON.stringify({ ...o, generatedAt: undefined }) : '')
@@ -142,7 +120,6 @@ function writeIfChanged(file: string, key: string, data: Record<string, unknown>
   return true
 }
 
-/** Публичные репозитории владельца; если список недоступен — репозитории из прошлого списка проектов */
 async function ownerRepos(): Promise<Repo[]> {
   try {
     const repos = await api<Repo[]>(`users/${OWNER}/repos?per_page=100&type=owner`)
@@ -160,7 +137,6 @@ async function ownerRepos(): Promise<Repo[]> {
   }
 }
 
-/** Даты коммитов за последний год (до 500 на репозиторий) */
 async function commitDates(repo: string, since: string): Promise<string[]> {
   const dates: string[] = []
   for (let page = 1; page <= 5; page++) {
@@ -178,7 +154,6 @@ async function main() {
   console.log(`[sync] владелец ${OWNER}, текущий репозиторий ${SELF_REPO}, токен: ${token ? 'есть' : 'нет'}`)
   const found: PortfolioProject[] = []
 
-  // 1. Основные ветки публичных репозиториев владельца
   const repos = await ownerRepos()
   for (const r of repos) {
     const p = await readManifest(r, r.default_branch)
@@ -188,7 +163,6 @@ async function main() {
     }
   }
 
-  // 2. Все ветки текущего репозитория (необязательно: репозитория может не быть или он закрыт)
   const self = await optional<Repo | null>(`repos/${SELF_REPO}`, null)
   if (self) {
     const branches = await optional<{ name: string }[]>(`repos/${SELF_REPO}/branches?per_page=100`, [])
@@ -208,7 +182,6 @@ async function main() {
     return
   }
 
-  // 3. Релизы и языки проектов
   const languages: Record<string, number>[] = []
   for (const p of projects) {
     if (!p.repo) continue
@@ -220,7 +193,6 @@ async function main() {
     languages.push(await optional<Record<string, number>>(`repos/${p.repo}/languages`, {}))
   }
 
-  // 4. Активность за год: коммиты во всех публичных репозиториях, где были пуши за последний год
   const now = new Date()
   const since = new Date(now.getTime() - YEAR_MS).toISOString()
   const active = repos.filter((r) => r.pushed_at >= since)
@@ -245,7 +217,6 @@ async function main() {
 }
 
 main().catch((err) => {
-  // Сеть или лимиты GitHub не должны ломать сборку сайта
   console.warn(`[sync] не удалось обновить данные: ${err instanceof Error ? err.message : err}`)
   console.warn('[sync] сайт соберётся с прошлыми данными')
   if (process.argv.includes('--strict')) process.exit(1)

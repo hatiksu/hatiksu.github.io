@@ -1,6 +1,3 @@
-// После сборки: страницы для шаринга dist/p/<slug>/index.html.
-// Мессенджеры и соцсети не видят адреса с # (#/project/…), поэтому для каждого проекта есть обычная страница
-// с превью (Open Graph) — она сразу перенаправляет посетителя на страницу проекта внутри сайта.
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -44,7 +41,6 @@ for (const p of projects) {
   mkdirSync(join(DIST, 'p', p.slug), { recursive: true })
   writeFileSync(join(DIST, 'p', p.slug, 'index.html'), html)
 }
-// Карта сайта для поисковиков: главная и страницы проектов
 const urls = [SITE_URL, ...projects.map((p) => `${SITE_URL}p/${p.slug}/`)]
 writeFileSync(
   join(DIST, 'sitemap.xml'),

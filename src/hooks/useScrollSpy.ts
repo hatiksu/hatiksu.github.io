@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 
-/** Возвращает id секции, которая сейчас в зоне видимости. */
 export function useScrollSpy(ids: string[], offset = 120): string | null {
   const [active, setActive] = useState<string | null>(null)
   const key = ids.join('|')
@@ -13,7 +12,6 @@ export function useScrollSpy(ids: string[], offset = 120): string | null {
         const el = document.getElementById(id)
         if (el && el.getBoundingClientRect().top - offset <= 0) current = id
       }
-      // У самого низа страницы подсвечиваем последнюю секцию
       if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) {
         current = sectionIds[sectionIds.length - 1] ?? current
       }

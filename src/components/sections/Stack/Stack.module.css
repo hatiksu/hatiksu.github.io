@@ -31,7 +31,6 @@
 
 @keyframes scroll {
   to {
-    /* Сдвиг на половину ленты (= исходный список + половина отступа) */
     transform: translateX(calc(-50% - 7px));
   }
 }

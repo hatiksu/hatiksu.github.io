@@ -1,4 +1,3 @@
-// Минимальный разбор Markdown из описаний релизов — без HTML, только безопасные блоки.
 export type MdInline = { type: 'text' | 'code' | 'bold'; value: string }
 export type MdBlock =
   | { type: 'heading'; inline: MdInline[] }

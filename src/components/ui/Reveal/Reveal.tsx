@@ -9,7 +9,6 @@ interface RevealProps {
   as?: 'div' | 'li' | 'article'
 }
 
-/** Плавное появление блока, когда он попадает в зону видимости. */
 export function Reveal({ children, delay = 0, y = 32, className, as = 'div' }: RevealProps) {
   const Tag = motion[as]
   return (

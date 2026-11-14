@@ -14,7 +14,6 @@ interface NavbarProps {
   name: string
   links: NavLink[]
   contacts: Contacts
-  /** На странице проекта разделы главной не подсвечиваем */
   spy: boolean
   onSearch: () => void
 }
@@ -30,7 +29,6 @@ export function Navbar({ name, links, contacts, spy, onSearch }: NavbarProps) {
   const active = spy ? spied : null
   const close = useCallback(() => setOpen(false), [])
 
-  // Закрываем меню, если экран стал широким
   useEffect(() => {
     const mq = matchMedia('(min-width: 961px)')
     const onChange = () => mq.matches && setOpen(false)

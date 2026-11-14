@@ -1,5 +1,3 @@
-// Картинки превью для соцсетей и мессенджеров (1200×630): общая для сайта и своя для каждого проекта.
-// Рендерит HTML-шаблон в Playwright и сохраняет public/og/*.jpg. Запуск: npm run og
 import { existsSync, mkdirSync, readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'

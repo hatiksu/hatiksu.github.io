@@ -10,7 +10,6 @@
   transition: border-color 0.3s;
 }
 
-/* Подсветка за курсором */
 .card::before {
   content: '';
   position: absolute;

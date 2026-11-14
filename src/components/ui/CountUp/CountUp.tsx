@@ -7,7 +7,6 @@ interface CountUpProps {
   duration?: number
 }
 
-/** Число, которое «набегает» от нуля, когда появляется на экране. */
 export function CountUp({ value, suffix = '', duration = 1.6 }: CountUpProps) {
   const ref = useRef<HTMLSpanElement>(null)
   const inView = useInView(ref, { once: true, margin: '-40px' })
@@ -27,7 +26,6 @@ export function CountUp({ value, suffix = '', duration = 1.6 }: CountUpProps) {
 
   return (
     <span ref={ref}>
-      {/* Анимированное число — для глаз, настоящее значение — для программ чтения с экрана */}
       <span aria-hidden="true">
         {display}
         {suffix}

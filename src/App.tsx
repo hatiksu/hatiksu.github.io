@@ -14,7 +14,6 @@ import { ScrollProgress } from './components/ui/ScrollProgress/ScrollProgress'
 import { Toaster } from './components/ui/Toaster/Toaster'
 import { Home } from './pages/Home/Home'
 
-// Страница проекта и палитра нужны не сразу — грузим их отдельными чанками
 const ProjectPage = lazy(() => import('./pages/ProjectPage/ProjectPage').then((m) => ({ default: m.ProjectPage })))
 const NotFound = lazy(() => import('./pages/NotFound/NotFound').then((m) => ({ default: m.NotFound })))
 const Terminal = lazy(() => import('./components/ui/Terminal/Terminal').then((m) => ({ default: m.Terminal })))
@@ -24,7 +23,6 @@ function Shell() {
   const { t, lang } = usePreferences()
   const route = useRoute()
   const [paletteOpen, setPaletteOpen] = useState(false)
-  // Палитру монтируем после первого открытия, чтобы не грузить её код заранее
   const [paletteUsed, setPaletteUsed] = useState(false)
   const [terminalOpen, setTerminalOpen] = useState(false)
   const [terminalUsed, setTerminalUsed] = useState(false)
@@ -32,7 +30,6 @@ function Shell() {
   const prevPage = useRef(route.page)
   const links = site.sections.map((id) => ({ id, label: t.nav[id] }))
 
-  // Прокрутка при смене маршрута: страница проекта — сверху, раздел главной — к разделу
   useLayoutEffect(() => {
     const changedPage = prevPage.current !== route.page
     prevPage.current = route.page
@@ -42,17 +39,13 @@ function Shell() {
     }
     if (route.section) {
       const id = route.section
-      // Ждём кадр, пока главная отрисуется после страницы проекта
       requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView({ behavior: changedPage ? 'instant' : 'smooth' }))
     } else if (changedPage) window.scrollTo({ top: 0, behavior: 'instant' })
   }, [route])
 
-  // Ctrl+K / ⌘K и «/» — командная палитра, ` — терминал.
-  // useLayoutEffect: клавиши работают сразу, как только страница отрисовалась
   useLayoutEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const typing = e.target instanceof HTMLElement && (e.target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName))
-      // ` (на русской раскладке — ё): терминал-пасхалка
       if (e.code === 'Backquote' && !typing && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault()
         setTerminalUsed(true)
@@ -79,7 +72,6 @@ function Shell() {
   const playing = playSlug ? site.projects.find((p) => p.slug === playSlug) : undefined
 
   return (
-    // reducedMotion="user" — уважаем системную настройку «уменьшить движение»
     <MotionConfig reducedMotion="user">
       <Background />
       <ScrollProgress />

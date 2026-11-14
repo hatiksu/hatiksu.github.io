@@ -3,7 +3,6 @@ import { AnimatePresence, motion } from 'motion/react'
 import { onToast } from '../../../lib/toast'
 import styles from './Toaster.module.css'
 
-/** Показывает последнее уведомление на пару секунд */
 export function Toaster() {
   const [message, setMessage] = useState<{ id: number; text: string } | null>(null)
 

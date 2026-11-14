@@ -1,6 +1,5 @@
 import styles from './FinanceMockup.module.css'
 
-// Доли сегментов кольца и высоты столбиков — просто для иллюстрации
 const RING = [
   { share: 0.42, color: '#3987e5' },
   { share: 0.22, color: '#d95926' },
@@ -9,10 +8,8 @@ const RING = [
   { share: 0.08, color: '#9085e9' },
 ]
 const BARS = [30, 55, 22, 70, 40, 85, 48, 35, 62, 28, 50, 74]
-const R = 15.9155 // длина окружности = 100, удобно для stroke-dasharray в процентах
+const R = 15.9155
 
-/** Схематичный экран финансового трекера в рамке телефона. */
-// Смещения сегментов по кругу (начинаем сверху)
 const SEGMENTS: { color: string; dash: number; offset: number }[] = []
 for (let i = 0, offset = 25; i < RING.length; i++) {
   const dash = RING[i].share * 100

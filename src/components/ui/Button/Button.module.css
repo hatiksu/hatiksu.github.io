@@ -25,7 +25,6 @@
   box-shadow: 0 12px 40px -12px var(--a1);
 }
 
-/* Блик, пробегающий по кнопке при наведении */
 .primary::after {
   content: '';
   position: absolute;

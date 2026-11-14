@@ -17,10 +17,6 @@ function compile(gl: WebGLRenderingContext, type: number, src: string) {
   return s
 }
 
-/**
- * Фон страницы: WebGL-«туманность», которая тянется к курсору и реагирует на наклон телефона.
- * Без WebGL — градиентные пятна на CSS. При «уменьшить движение» — один статичный кадр.
- */
 export function Background() {
   const { theme } = usePreferences()
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -64,7 +60,6 @@ export function Background() {
     gl.uniform1f(uLight, theme === 'light' ? 1 : 0)
 
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
-    // Рисуем в пониженном разрешении: шум мягкий, а GPU телефона скажет спасибо
     const scale = matchMedia('(pointer: coarse)').matches ? 0.35 : 0.5
     const resize = () => {
       canvas.width = Math.max(1, Math.round(innerWidth * scale))
@@ -100,7 +95,6 @@ export function Background() {
       gl.drawArrays(gl.TRIANGLES, 0, 3)
       if (!reduce) raf = requestAnimationFrame(frame)
     }
-    // Запускаем после загрузки и простоя: первый экран и интерактивность важнее фона
     const begin = () => {
       started = true
       raf = requestAnimationFrame(frame)
@@ -110,7 +104,6 @@ export function Background() {
     if (document.readyState === 'complete') kickoff()
     else window.addEventListener('load', kickoff, { once: true })
 
-    // Во вкладке на фоне не тратим батарею
     const onVisibility = () => {
       cancelAnimationFrame(raf)
       if (!document.hidden && started) raf = requestAnimationFrame(frame)

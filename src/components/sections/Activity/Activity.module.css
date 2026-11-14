@@ -40,7 +40,6 @@
 .scroller {
   overflow-x: auto;
   scrollbar-width: thin;
-  /* На телефоне показываем последние месяцы — прокрутка начинается с конца */
   direction: rtl;
 }
 

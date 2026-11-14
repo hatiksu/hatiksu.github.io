@@ -12,7 +12,6 @@ interface PlayFrameProps {
   onClose: () => void
 }
 
-/** Приложение, встроенное в сайт: открывается поверх страницы в окне-«устройстве» */
 export function PlayFrame({ open, slug, title, onClose }: PlayFrameProps) {
   useLockBodyScroll(open)
   return <AnimatePresence>{open && <Player key={slug} slug={slug} title={title} onClose={onClose} />}</AnimatePresence>
@@ -25,7 +24,6 @@ function Player({ slug, title, onClose }: Omit<PlayFrameProps, 'open'>) {
   const closeRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
-    // Сборки приложений появляются после npm run apps; без них показываем подсказку, а не 404
     let alive = true
     fetch(`${src}index.html`, { method: 'HEAD' })
       .then((r) => alive && !r.ok && setState('missing'))

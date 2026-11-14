@@ -16,7 +16,6 @@
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- Шрифты не блокируют первую отрисовку: подключаются после загрузки стилей -->
     <link
       rel="preload"
       as="style"
@@ -30,7 +29,6 @@
     />
     <title>Hatiksu — разработчик</title>
     <script>
-      // Тема до первой отрисовки, чтобы не было вспышки тёмного фона в светлой теме
       try {
         var t = localStorage.getItem('theme')
         if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'

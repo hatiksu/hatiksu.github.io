@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 
-/** Блокирует прокрутку страницы, пока locked = true (для мобильного меню). */
 export function useLockBodyScroll(locked: boolean) {
   useEffect(() => {
     if (!locked) return

@@ -10,7 +10,6 @@ interface BurgerProps {
 
 const transition = { duration: 0.35, ease: [0.22, 1, 0.36, 1] } as const
 
-/** Кнопка-бургер, которая превращается в крестик. */
 export function Burger({ open, onToggle, controls }: BurgerProps) {
   const { t } = usePreferences()
   return (

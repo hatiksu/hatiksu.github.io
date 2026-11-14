@@ -6,11 +6,9 @@ import styles from './NotFound.module.css'
 interface NotFoundProps {
   title?: string
   text?: string
-  /** Ссылка «На главную»: на странице 404.html — абсолютная, внутри сайта — якорь */
   homeHref?: string
 }
 
-/** «Страница не найдена» с мини-игрой, чтобы было не так обидно */
 export function NotFound({ title, text, homeHref = '#top' }: NotFoundProps) {
   const { t } = usePreferences()
   return (

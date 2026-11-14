@@ -4,7 +4,6 @@ import { Background } from '../../components/ui/Background/Background'
 import { PrefsToggles } from '../../components/ui/PrefsToggles/PrefsToggles'
 import { NotFound } from './NotFound'
 
-/** Оболочка отдельной страницы 404.html: фон, логотип, переключатели и игра */
 export function NotFoundApp() {
   return (
     <MotionConfig reducedMotion="user">

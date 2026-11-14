@@ -5,7 +5,6 @@ interface GenericMockupProps {
   title: string
 }
 
-/** Универсальный макет для новых проектов: большая иконка на «карточке приложения». */
 export function GenericMockup({ icon, title }: GenericMockupProps) {
   return (
     <div className={styles.card}>

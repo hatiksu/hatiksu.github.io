@@ -7,7 +7,6 @@ import styles from './ContactForm.module.css'
 
 type Status = 'idle' | 'sending' | 'sent' | 'failed' | 'rate'
 
-/** Форма «Написать мне»: FormSubmit пересылает сообщение на почту */
 export function ContactForm({ endpoint }: { endpoint: string }) {
   const { t, lang } = usePreferences()
   const f = t.contact.form
@@ -26,7 +25,6 @@ export function ContactForm({ endpoint }: { endpoint: string }) {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
     const elapsedMs = startedAt.current ? Date.now() - startedAt.current : 0
-    // Сначала поля (без антиспама), чтобы человек увидел свои ошибки
     const check = validateMessage({ ...values, website: '', lang, elapsedMs: LIMITS.minFillMs })
     if (!check.ok) {
       if (!check.spam) {
@@ -35,7 +33,6 @@ export function ContactForm({ endpoint }: { endpoint: string }) {
       }
       return
     }
-    // Бот (заполнил ловушку или отправил мгновенно) видит «успех», но ничего не уходит
     if (!validateMessage({ ...values, lang, elapsedMs }).ok) return setStatus('sent')
     setStatus('sending')
     try {
@@ -100,7 +97,6 @@ export function ContactForm({ endpoint }: { endpoint: string }) {
         f.message,
         <textarea {...aria('message')} className={`${styles.input} ${styles.textarea}`} value={values.message} onChange={set('message')} maxLength={LIMITS.message} rows={5} placeholder={f.placeholder} />,
       )}
-      {/* Ловушка для ботов: людям поле не видно */}
       <input className={styles.trap} name="website" value={values.website} onChange={set('website')} tabIndex={-1} autoComplete="off" aria-hidden="true" />
       <div className={styles.footer}>
         <span className={styles.counter}>

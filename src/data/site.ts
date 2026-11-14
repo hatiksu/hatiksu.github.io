@@ -1,4 +1,3 @@
-// Данные сайта, не зависящие от языка. Тексты — в src/i18n/ru.ts и en.ts.
 import type { AppsData, Contacts, Tech } from '../types'
 import type { GithubStats } from '../lib/github'
 import type { PortfolioProject } from '../lib/projects'
@@ -33,20 +32,12 @@ const stack: Tech[] = [
 
 export const site = {
   name: 'Hatiksu',
-  /** Адрес сайта — для ссылок «Поделиться» и картинок превью */
   url: 'https://hatiksu.github.io/',
-  /** Разделы главной в порядке появления */
   sections: ['skills', 'stack', 'projects', 'activity', 'contact'] as const,
   stack,
-  // Проекты, встроенные приложения и статистика собираются скриптами npm run sync и npm run apps.
-  // Вручную эти списки не правим.
   projects: generated.projects as PortfolioProject[],
   apps: (apps as AppsData).apps,
   github: github as GithubStats,
-  /**
-   * Куда отправляется форма «Написать мне»: FormSubmit пересылает её на почту.
-   * После активации FormSubmit выдаёт скрытый адрес — его можно задать переменной VITE_CONTACT_ENDPOINT.
-   */
   contactEndpoint: (import.meta.env.VITE_CONTACT_ENDPOINT || 'https://formsubmit.co/ajax/hatiksuofficial@gmail.com').trim(),
   contacts: {
     github: 'https://github.com/hatiksu',
@@ -57,5 +48,4 @@ export const site = {
 
 export type SectionId = (typeof site.sections)[number]
 
-/** Приложение собрано внутрь сайта и его можно запустить («Играть тут»); у ботов есть только скриншоты */
 export const isEmbedded = (slug: string): boolean => Boolean(site.apps[slug]) && site.apps[slug].embedded !== false

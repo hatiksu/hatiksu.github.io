@@ -14,7 +14,6 @@ test('проекты подтягиваются из portfolio.json', async ({ p
   for (const title of titles) {
     await expect(page.getByRole('heading', { level: 3, name: title })).toBeAttached()
   }
-  // Счётчик проектов совпадает со списком (анимация запускается, когда счётчик на экране)
   await page.locator('#stats').scrollIntoViewIfNeeded()
   await expect(page.locator('#stats').getByText('проектов в портфолио').locator('..').locator('strong [aria-hidden]')).toHaveText(
     String(titles.length),
@@ -60,7 +59,6 @@ test('«Играть тут» открывает приложение повер
   await page.getByRole('button', { name: 'Играть тут' }).first().click()
   const dialog = page.getByRole('dialog', { name: game.title })
   await expect(dialog).toBeVisible()
-  // Встроенная сборка есть после npm run apps; без неё — подсказка вместо пустого окна
   await expect(dialog.locator('iframe').or(dialog.getByText('npm run apps'))).toBeVisible()
   await page.keyboard.press('Escape')
   await expect(dialog).toBeHidden()
@@ -114,7 +112,6 @@ test('форма «Написать мне»: проверка полей и о�
   await form.getByLabel('Как тебя зовут').fill('Анна')
   await form.getByLabel('Почта или @telegram').fill('anna@example.com')
   await form.getByLabel('Сообщение').fill('Привет! Хочу заказать сайт.')
-  // Антиспам: мгновенно заполненную форму отправляет бот, а не человек
   await page.waitForTimeout(2700)
   await form.getByRole('button', { name: 'Отправить', exact: true }).click()
   await expect(page.getByText('Сообщение улетело!')).toBeVisible()
@@ -123,7 +120,6 @@ test('форма «Написать мне»: проверка полей и о�
 
 test('«Написать на почту» показывает адрес, даже если почтового приложения нет', async ({ page, context }) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']).catch(() => undefined)
-  // Перехватываем переход по mailto:, чтобы страница не уходила
   await page.addInitScript(() => {
     document.addEventListener('click', (e) => {
       const a = (e.target as Element).closest('a[href^="mailto:"]')
@@ -138,11 +134,9 @@ test('«Написать на почту» показывает адрес, да
 test('терминал: ` открывает, команды работают', async ({ page, isMobile }) => {
   test.skip(isMobile, 'на телефоне нет клавиатуры — терминал открывается из палитры')
   await page.goto('./')
-  // Горячие клавиши вешаются вместе с первой отрисовкой — ждём, пока страница появится
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
   await page.keyboard.press('Backquote')
   const term = page.getByRole('dialog', { name: 'Терминал' })
-  // Код терминала грузится отдельным чанком при первом открытии
   await expect(term).toBeVisible({ timeout: 15_000 })
   const input = term.getByRole('textbox', { name: 'Команда' })
   await input.fill('projects')

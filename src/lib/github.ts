@@ -1,17 +1,11 @@
-// Статистика активности на GitHub: карта коммитов за год и языки по объёму кода.
-// Считается при синхронизации (scripts/sync-projects.ts), на сайте только отображается.
-
 export interface LanguageShare {
   name: string
   bytes: number
-  /** Доля от 0 до 1 */
   share: number
 }
 
 export interface Heatmap {
-  /** Первый день карты (понедельник), YYYY-MM-DD */
   start: string
-  /** Число коммитов по дням подряд, начиная со start */
   days: number[]
 }
 
@@ -30,16 +24,11 @@ export interface GithubStats {
 
 const DAY = 86_400_000
 
-/** YYYY-MM-DD в UTC */
 export const isoDay = (d: Date): string => d.toISOString().slice(0, 10)
 
-/**
- * Карта активности за последние weeks недель: колонки — недели с понедельника, последняя содержит сегодня.
- * dates — даты коммитов (ISO); всё, что вне окна, отбрасывается.
- */
 export function buildHeatmap(dates: string[], today: Date, weeks = 53): Heatmap {
   const end = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()))
-  const weekday = (end.getUTCDay() + 6) % 7 // 0 — понедельник
+  const weekday = (end.getUTCDay() + 6) % 7
   const start = new Date(end.getTime() - (weekday + (weeks - 1) * 7) * DAY)
   const length = Math.round((end.getTime() - start.getTime()) / DAY) + 1
   const days = new Array<number>(length).fill(0)
@@ -53,21 +42,18 @@ export function buildHeatmap(dates: string[], today: Date, weeks = 53): Heatmap 
   return { start: isoDay(start), days }
 }
 
-/** Делит дни карты на недели (по 7, последняя может быть неполной) */
 export function heatmapWeeks(h: Heatmap): number[][] {
   const weeks: number[][] = []
   for (let i = 0; i < h.days.length; i += 7) weeks.push(h.days.slice(i, i + 7))
   return weeks
 }
 
-/** Уровень цвета клетки 0–4 относительно самого активного дня */
 export function heatLevel(count: number, max: number): 0 | 1 | 2 | 3 | 4 {
   if (count <= 0 || max <= 0) return 0
   const r = count / max
   return r > 0.75 ? 4 : r > 0.5 ? 3 : r > 0.25 ? 2 : 1
 }
 
-/** Самая длинная серия дней подряд с коммитами */
 export function longestStreak(days: number[]): number {
   let best = 0
   let cur = 0
@@ -78,7 +64,6 @@ export function longestStreak(days: number[]): number {
   return best
 }
 
-/** Складывает языки нескольких репозиториев; всё мелкое после top — в «Другое» (Other) */
 export function mergeLanguages(list: Record<string, number>[], top = 6): LanguageShare[] {
   const sum = new Map<string, number>()
   for (const langs of list) for (const [name, bytes] of Object.entries(langs)) sum.set(name, (sum.get(name) ?? 0) + bytes)

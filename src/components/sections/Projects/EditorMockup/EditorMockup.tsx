@@ -1,6 +1,5 @@
 import styles from './EditorMockup.module.css'
 
-/** Схематичный макет фоторедактора в окне браузера (если скриншотов ещё нет). */
 export function EditorMockup() {
   return (
     <div className={styles.mock}>

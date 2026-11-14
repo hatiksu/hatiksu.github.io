@@ -1,18 +1,3 @@
-// Встраивает приложения в сайт и снимает их скриншоты.
-//
-// Для каждого проекта из src/data/projects.generated.json с публичным репозиторием на GitHub:
-//   1. клонирует репозиторий (кеш — .apps-cache/<slug>), ставит зависимости и собирает приложение
-//      без Service Worker (DESKTOP=1), чтобы оно не кешировалось внутри сайта;
-//   2. кладёт сборку в public/apps/<slug>/ — на сайте её можно открыть и поиграть прямо на странице;
-//   3. открывает приложение в Playwright и снимает экраны компьютера и телефона в public/shots/
-//      (JPEG для превью и уменьшенный WebP для сайта);
-//   4. записывает список в src/data/apps.generated.json.
-// Если коммит не изменился и всё на месте, проект пропускается.
-//
-// Проекты без веб-версии (например, Telegram-боты) не собираются: если в portfolio.json есть "screenshots",
-// готовые картинки берутся прямо из репозитория проекта и показываются на сайте вместо автоскриншотов.
-//
-// Запуск: npm run apps  (--force — пересобрать всё, --no-shots — без скриншотов)
 import { execFileSync } from 'node:child_process'
 import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
 import { createServer, type Server } from 'node:http'
@@ -44,7 +29,6 @@ function readJson<T>(file: string, fallback: T): T {
   }
 }
 
-/** Клонирует или обновляет репозиторий; возвращает хеш коммита */
 function checkout(repo: string, dir: string): string {
   const url = `https://github.com/${repo}.git`
   if (existsSync(join(dir, '.git'))) {
@@ -78,7 +62,6 @@ const MIME: Record<string, string> = {
   '.woff2': 'font/woff2',
 }
 
-/** Простой статический сервер для скриншотов */
 function serve(dir: string): Promise<{ server: Server; port: number }> {
   const server = createServer((req, res) => {
     let path = decodeURIComponent(new URL(req.url ?? '/', 'http://x').pathname)
@@ -117,11 +100,9 @@ async function shoot(projects: PortfolioProject[]) {
         })
         const page = await context.newPage()
         await page.goto(`http://127.0.0.1:${port}/apps/${slug}/`, { waitUntil: 'networkidle' })
-        // Даём отыграть стартовые анимации
         await page.waitForTimeout(1500)
         if (shot?.click) {
           await page.getByText(shot.click).first().click({ timeout: 5000 }).catch(() => console.warn(`  ⚠ ${slug}: нет кнопки «${shot.click}»`))
-          // Ждём, пока исчезнут всплывающие уведомления
           await page.waitForTimeout(5000)
         }
         await page.screenshot({ path: join(SHOTS, `${slug}-${v.name}.jpg`), type: 'jpeg', quality: 82 })
@@ -135,7 +116,6 @@ async function shoot(projects: PortfolioProject[]) {
   }
 }
 
-/** Готовые скриншоты из репозитория проекта → public/shots/<slug>-desktop.jpg и -mobile.jpg (JPEG через canvas) */
 async function importShots(jobs: { from: string; to: string }[]) {
   if (!jobs.length) return
   const { chromium } = await import('@playwright/test')
@@ -161,7 +141,6 @@ async function importShots(jobs: { from: string; to: string }[]) {
   await browser.close()
 }
 
-/** Уменьшенные WebP-копии скриншотов для сайта (кодирует сам Chromium через canvas) */
 async function makeWebp() {
   const { chromium } = await import('@playwright/test')
   const sizes: Record<string, number> = { desktop: 960, mobile: 420 }
@@ -212,7 +191,6 @@ async function main() {
       const commit = checkout(p.repo, dir)
       const own = p.screenshots
       if (own) {
-        // Свои скриншоты проекта (бот и т.п.): копируем при каждом изменении коммита
         const shots = { desktop: `shots/${p.slug}-desktop.jpg`, mobile: `shots/${p.slug}-mobile.jpg` }
         const desktopSrc = own.desktop ?? own.mobile
         const mobileSrc = own.mobile ?? own.desktop

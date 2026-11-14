@@ -5,7 +5,6 @@ import { detectLang, detectTheme, storage, type Theme } from '../lib/prefs'
 import type { Lang } from '../lib/projects'
 import { PreferencesContext, type Preferences } from './preferences'
 
-/** Язык и тема сайта: запоминаются в браузере, применяются к <html> (lang, data-theme) */
 export function PreferencesProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>(() => detectLang(storage.get('lang'), navigator.languages ?? [navigator.language]))
   const [theme, setTheme] = useState<Theme>(() => detectTheme(storage.get('theme'), matchMedia('(prefers-color-scheme: light)').matches))
@@ -36,7 +35,6 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
         storage.set('theme', next)
         return next
       })
-    // Плавная смена темы через View Transitions, где они есть
     const doc = document as Document & { startViewTransition?: (cb: () => void) => unknown }
     if (doc.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches) doc.startViewTransition(apply)
     else apply()

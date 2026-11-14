@@ -1,9 +1,6 @@
-// Поиск для командной палитры: все слова запроса должны встретиться, совпадение в начале — выше.
-
 export interface Searchable {
   id: string
   label: string
-  /** Дополнительные слова для поиска (теги, синонимы) */
   keywords?: string
 }
 
@@ -21,7 +18,6 @@ export function score(item: Searchable, query: string): number {
   return 1
 }
 
-/** Отфильтрованный список: сначала лучшие совпадения, при равенстве — исходный порядок */
 export function search<T extends Searchable>(items: T[], query: string): T[] {
   return items
     .map((item, i) => ({ item, i, s: score(item, query) }))

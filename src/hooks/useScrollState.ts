@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react'
 
 interface ScrollState {
-  /** Страница прокручена дальше порога */
   scrolled: boolean
-  /** Пользователь листает вниз (для скрытия шапки) */
   hidden: boolean
   y: number
 }

@@ -32,7 +32,6 @@ const item: Variants = {
   open: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
 }
 
-/** Полноэкранное мобильное меню с раскрытием кругом из бургера. */
 export function MobileMenu({ id, open, links, active, contacts, onClose }: MobileMenuProps) {
   const { t } = usePreferences()
   const firstLink = useRef<HTMLAnchorElement>(null)
@@ -88,7 +87,6 @@ export function MobileMenu({ id, open, links, active, contacts, onClose }: Mobil
             <PrefsToggles />
             {socials.map((s) =>
               s.href.startsWith('mailto:') ? (
-                // mailto: — без новой вкладки: на телефоне в новой вкладке она часто не срабатывает
                 <a key={s.label} href={s.href} onClick={() => copyEmail(contacts.email, t.contact.mailCopied)}>
                   {s.label} ↗
                 </a>
